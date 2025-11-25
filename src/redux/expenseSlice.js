@@ -1,3 +1,4 @@
+// src/redux/expenseSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -15,14 +16,19 @@ const expenseSlice = createSlice({
   initialState,
   reducers: {
     updateTotalExpense: (state, action) => {
-      const { amount, operation } = action.payload;
-      if (operation === "add") state.totalExpense += amount;
-      else if (operation === "subtract") state.totalExpense -= amount;
+      if (action.payload.operation === "add") {
+        state.totalExpense += action.payload.amount;
+      } else if (action.payload.operation === "subtract") {
+        state.totalExpense -= action.payload.amount;
+      }
     },
     updateCategoricalExpense: (state, action) => {
       const { category, amount, operation } = action.payload;
-      if (operation === "add") state.categoricalExpense[category] += amount;
-      else if (operation === "subtract") state.categoricalExpense[category] -= amount;
+      if (operation === "add") {
+        state.categoricalExpense[category] += amount;
+      } else if (operation === "subtract") {
+        state.categoricalExpense[category] -= amount;
+      }
     },
     resetAllExpense: () => initialState,
   },

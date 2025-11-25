@@ -1,7 +1,8 @@
+// src/redux/transactionSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  transactionList: [], // match test
+  transactionList: [], // match the test
 };
 
 const transactionSlice = createSlice({
@@ -9,11 +10,11 @@ const transactionSlice = createSlice({
   initialState,
   reducers: {
     addTransactionEntry: (state, action) => {
-      state.transactionList.push(action.payload);
+      state.transactionList.push(action.payload); // match test
     },
     removeTransactionEntry: (state, action) => {
       state.transactionList = state.transactionList.filter(
-        (tx) => tx.id !== action.payload
+        tx => tx.id !== action.payload
       );
     },
     removeAllTransactions: (state) => {
@@ -22,10 +23,7 @@ const transactionSlice = createSlice({
   },
 });
 
-export const {
-  addTransactionEntry,
-  removeTransactionEntry,
-  removeAllTransactions,
-} = transactionSlice.actions;
+export const { addTransactionEntry, removeTransactionEntry, removeAllTransactions } =
+  transactionSlice.actions;
 
 export default transactionSlice.reducer;
