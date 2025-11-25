@@ -1,3 +1,4 @@
+// src/redux/userSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -12,7 +13,7 @@ const initialState = {
 };
 
 const userSlice = createSlice({
-  name: "user",
+  name: "user", // slice name expected by tests
   initialState,
   reducers: {
     updateUserName: (state, action) => {
