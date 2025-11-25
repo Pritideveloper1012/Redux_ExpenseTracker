@@ -1,0 +1,137 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* General page styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  margin-bottom: 10px;
+}
+
+/* Buttons */
+button {
+  padding: 5px 10px;
+  margin: 5px;
+  border: none;
+  background-color: #555;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #333;
+}
+
+/* Insights Table */
+.insights table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.insights th, .insights td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.insights th {
+  background-color: #f2f2f2;
+}
+
+.insights td .within {
+  color: green;
+  font-weight: bold;
+}
+
+/* Expense Form */
+.new-expense {
+  background-color: #e0e0e0;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+}
+
+.new-expense form div {
+  margin-bottom: 10px;
+}
+
+.new-expense input, .new-expense select {
+  padding: 5px;
+  width: 200px;
+}
+
+/* Filter pills */
+.filters button {
+  border-radius: 20px;
+  padding: 5px 15px;
+  margin: 5px;
+  background-color: #ccc;
+}
+
+.filters button:hover {
+  background-color: #aaa;
+}
+
+/* Expenses Table */
+.expenses-section table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.expenses-section th, .expenses-section td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.expenses-section th {
+  background-color: #f2f2f2;
+}
