@@ -1,9 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  name: "",
-  totalBudget: 0,
-  categories: {
+  totalExpense: 0,
+  categoricalExpense: {
     food: 0,
     travel: 0,
     entertainment: 0,
@@ -11,23 +10,22 @@ const initialState = {
   },
 };
 
-const budgetSlice = createSlice({
-  name: "budget",
+const expenseSlice = createSlice({
+  name: "expense",
   initialState,
   reducers: {
-    setBudget: (state, action) => {
-      const { name, totalBudget, categories } = action.payload;
-      state.name = name;
-      state.totalBudget = totalBudget;
-      state.categories = categories;
+    updateTotalExpense: (state, action) => {
+      state.totalExpense = action.payload;
     },
-    updateBudget: (state, action) => {
-      const { totalBudget, categories } = action.payload;
-      state.totalBudget = totalBudget;
-      state.categories = categories;
+    updateCategoricalExpense: (state, action) => {
+      const { category, amount } = action.payload;
+      state.categoricalExpense[category] = amount;
     },
+    resetAllExpense: () => initialState,
   },
 });
 
-export const { setBudget, updateBudget } = budgetSlice.actions;
-export default budgetSlice.reducer;
+export const { updateTotalExpense, updateCategoricalExpense, resetAllExpense } =
+  expenseSlice.actions;
+
+export default expenseSlice.reducer;

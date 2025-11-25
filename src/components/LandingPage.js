@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setBudget } from "../redux/expenseSlice";
 import { useNavigate } from "react-router-dom";
+
+// Redux actions
+import { updateUserName, updateMonthlyBudget, updateCategoricalBudget } from "../redux/userSlice";
+import { resetAllExpense } from "../redux/expenseSlice";
 
 const LandingPage = () => {
   const dispatch = useDispatch();
@@ -46,18 +49,17 @@ const LandingPage = () => {
     const others = total - sumCategories;
 
     // Dispatch to Redux store
-    dispatch(
-      setBudget({
-        name,
-        totalBudget: total,
-        categories: {
-          food: foodBudget,
-          travel: travelBudget,
-          entertainment: entertainmentBudget,
-          other: others,
-        },
-      })
-    );
+    dispatch(updateUserName(name));
+    dispatch(updateMonthlyBudget(total));
+    dispatch(updateCategoricalBudget({
+      food: foodBudget,
+      travel: travelBudget,
+      entertainment: entertainmentBudget,
+      other: others,
+    }));
+
+    // Reset all previous expenses
+    dispatch(resetAllExpense());
 
     // Redirect to Transactions Page
     navigate("/tracker");

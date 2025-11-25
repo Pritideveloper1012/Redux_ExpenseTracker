@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   name: "",
-  totalBudget: 0,
-  categories: {
+  monthlyBudget: 0,
+  categoricalBudget: {
     food: 0,
     travel: 0,
     entertainment: 0,
@@ -15,21 +15,24 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUserName: (state, action) => {
+    updateUserName: (state, action) => {
       state.name = action.payload;
     },
-    setBudget: (state, action) => {
-      state.totalBudget = action.payload;
+    updateMonthlyBudget: (state, action) => {
+      state.monthlyBudget = action.payload;
     },
-    setCategoryBudget: (state, action) => {
-      const { category, amount } = action.payload;
-      state.categories[category] = amount;
+    updateCategoricalBudget: (state, action) => {
+      state.categoricalBudget = action.payload;
     },
     resetUser: () => initialState,
   },
 });
 
-export const { setUserName, setBudget, setCategoryBudget, resetUser } =
-  userSlice.actions;
+export const {
+  updateUserName,
+  updateMonthlyBudget,
+  updateCategoricalBudget,
+  resetUser,
+} = userSlice.actions;
 
 export default userSlice.reducer;

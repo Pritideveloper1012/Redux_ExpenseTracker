@@ -4,24 +4,28 @@ const initialState = {
   transactions: [], // {id, name, category, amount}
 };
 
-const transactionsSlice = createSlice({
+const transactionSlice = createSlice({
   name: "transactions",
   initialState,
   reducers: {
-    addTransaction: (state, action) => {
+    addTransactionEntry: (state, action) => {
       state.transactions.push(action.payload);
     },
-    deleteTransaction: (state, action) => {
+    removeTransactionEntry: (state, action) => {
       state.transactions = state.transactions.filter(
         tx => tx.id !== action.payload
       );
     },
-    clearTransactions: state => {
+    removeAllTransactions: (state) => {
       state.transactions = [];
     },
   },
 });
 
-export const { addTransaction, deleteTransaction, clearTransactions } =
-  transactionsSlice.actions;
-export default transactionsSlice.reducer;
+export const {
+  addTransactionEntry,
+  removeTransactionEntry,
+  removeAllTransactions,
+} = transactionSlice.actions;
+
+export default transactionSlice.reducer;

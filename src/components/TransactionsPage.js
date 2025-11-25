@@ -1,48 +1,46 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateBudget } from "../redux/expenseSlice";
+import { updateTotalExpense, updateCategoricalExpense } from "../redux/expenseSlice"; // update budget/expense slice
 import {
-  addTransaction,
-  deleteTransaction,
-  clearTransactions,
-} from "../redux/transactionSlice";
+  addTransactionEntry,
+  removeTransactionEntry,
+  removeAllTransactions,
+} from "../redux/transactionSlice"; // correct transaction slice actions
 
 const TransactionsPage = () => {
   const dispatch = useDispatch();
 
-  // FIXED: Correct state structure
-  const user = useSelector((state) => state.user);
-  const budget = useSelector((state) => state.expenses);
-  const transactions = useSelector((state) => state.transactions.transactions);
+  // Selectors
+  const user = useSelector((state) => state.user) || { name: "" };
+  const budget = useSelector((state) => state.expenses) || {
+    totalBudget: 0,
+    categories: { food: 0, travel: 0, entertainment: 0, other: 0 },
+  };
+  const transactions = useSelector((state) => state.transactions.transactions) || [];
 
+  // Local state
   const [expenseName, setExpenseName] = useState("");
   const [expenseCategory, setExpenseCategory] = useState("food");
   const [expenseAmount, setExpenseAmount] = useState("");
   const [filter, setFilter] = useState("All");
 
-  // Initial category spent
-  const categorySpent = {
-    food: 0,
-    travel: 0,
-    entertainment: 0,
-    other: 0,
-  };
-
+  // Calculate spent per category
+  const categorySpent = { food: 0, travel: 0, entertainment: 0, other: 0 };
   transactions.forEach((tx) => {
     categorySpent[tx.category] += tx.amount;
   });
 
+  // Add new expense
   const handleAddExpense = (e) => {
     e.preventDefault();
-    const amount = Number(expenseAmount);
-
     if (!expenseName || !expenseAmount) {
       alert("All fields are required");
       return;
     }
 
+    const amount = Number(expenseAmount);
     dispatch(
-      addTransaction({
+      addTransactionEntry({
         id: Date.now(),
         name: expenseName,
         category: expenseCategory,
@@ -50,25 +48,30 @@ const TransactionsPage = () => {
       })
     );
 
+    // Update budget spent
+    dispatch(updateCategoricalExpense({ category: expenseCategory, amount }));
+
     setExpenseName("");
     setExpenseAmount("");
   };
 
-  const handleDelete = (id) => {
-    dispatch(deleteTransaction(id));
+  // Delete expense
+  const handleDelete = (id, category, amount) => {
+    dispatch(removeTransactionEntry(id));
+    dispatch(updateCategoricalExpense({ category, amount: -amount }));
   };
 
+  // Start new tracker
   const handleNewTracker = () => {
-    dispatch(clearTransactions());
+    dispatch(removeAllTransactions());
     window.location.reload();
   };
 
+  // Update budgets
   const handleUpdateBudget = () => {
     const food = Number(prompt("New Food budget", budget.categories.food));
     const travel = Number(prompt("New Travel budget", budget.categories.travel));
-    const entertainment = Number(
-      prompt("New Entertainment budget", budget.categories.entertainment)
-    );
+    const entertainment = Number(prompt("New Entertainment budget", budget.categories.entertainment));
     const totalBudget = Number(prompt("New Total Budget", budget.totalBudget));
 
     const sum = food + travel + entertainment;
@@ -78,28 +81,21 @@ const TransactionsPage = () => {
     }
 
     dispatch(
-      updateBudget({
+      updateTotalExpense({
         totalBudget,
-        categories: {
-          food,
-          travel,
-          entertainment,
-          other: totalBudget - sum,
-        },
+        categories: { food, travel, entertainment, other: totalBudget - sum },
       })
     );
   };
 
-  // Apply filter
+  // Filtered transactions
   const filteredTransactions =
-    filter === "All"
-      ? transactions
-      : transactions.filter((tx) => tx.category === filter.toLowerCase());
+    filter === "All" ? transactions : transactions.filter((tx) => tx.category === filter.toLowerCase());
 
   return (
     <div className="transactions-page">
       <header>
-        <h1>{user.name} Expense Tracker</h1>
+        <h1>{user.name || "User"} Expense Tracker</h1>
 
         <button id="new-update" onClick={handleUpdateBudget}>
           Update Tracker
@@ -123,9 +119,9 @@ const TransactionsPage = () => {
             </tr>
           </thead>
           <tbody>
-            {Object.keys(budget.categories).map((cat) => {
-              const alloc = budget.categories[cat];
-              const spent = categorySpent[cat];
+            {Object.keys(budget.categories || {}).map((cat) => {
+              const alloc = budget.categories[cat] || 0;
+              const spent = categorySpent[cat] || 0;
               return (
                 <tr key={cat}>
                   <td>{cat.toUpperCase()}</td>
@@ -142,16 +138,16 @@ const TransactionsPage = () => {
       {/* Add Expense */}
       <section className="new-expense">
         <h2>New Expense</h2>
-
-        <form onSubmit={handleAddExpense}>
+        <form onSubmit={handleAddExpense} id="expense-form1">
           <input
+            id="expense-name"
             type="text"
             placeholder="Expense Name"
             value={expenseName}
             onChange={(e) => setExpenseName(e.target.value)}
           />
-
           <select
+            id="category-select"
             value={expenseCategory}
             onChange={(e) => setExpenseCategory(e.target.value)}
           >
@@ -160,14 +156,13 @@ const TransactionsPage = () => {
             <option value="entertainment">Entertainment</option>
             <option value="other">Other</option>
           </select>
-
           <input
+            id="expense-amount"
             type="number"
             placeholder="Amount"
             value={expenseAmount}
             onChange={(e) => setExpenseAmount(e.target.value)}
           />
-
           <button type="submit">Add</button>
         </form>
       </section>
@@ -191,10 +186,9 @@ const TransactionsPage = () => {
               <th>Name</th>
               <th>Category</th>
               <th>Amount</th>
-              <th></th>
+              <th>Action</th>
             </tr>
           </thead>
-
           <tbody>
             {filteredTransactions.map((tx, index) => (
               <tr key={tx.id}>
@@ -203,7 +197,7 @@ const TransactionsPage = () => {
                 <td>{tx.category}</td>
                 <td>{tx.amount}</td>
                 <td>
-                  <button onClick={() => handleDelete(tx.id)}>Delete</button>
+                  <button onClick={() => handleDelete(tx.id, tx.category, tx.amount)}>Delete</button>
                 </td>
               </tr>
             ))}
