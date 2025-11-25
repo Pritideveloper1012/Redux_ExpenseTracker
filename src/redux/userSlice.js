@@ -1,31 +1,34 @@
-// src/redux/userSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  name: "",
-  monthlyBudget: 0,
+  userName: "",
+  monthlyBudget: "",
   categoricalBudget: {
-    food: 0,
-    travel: 0,
-    entertainment: 0,
-    other: 0,
+    food: "",
+    travel: "",
+    entertainment: "",
+    others: "",
   },
+  activeFilter: "all",
 };
 
 const userSlice = createSlice({
-  name: "user", // slice name expected by tests
+  name: "user",
   initialState,
   reducers: {
     updateUserName: (state, action) => {
-      state.name = action.payload;
+      state.userName = action.payload;
     },
     updateMonthlyBudget: (state, action) => {
       state.monthlyBudget = action.payload;
     },
     updateCategoricalBudget: (state, action) => {
-      state.categoricalBudget = action.payload;
+      state.categoricalBudget = { ...state.categoricalBudget, ...action.payload };
     },
-    resetUser: () => initialState,
+    updateActiveFilter: (state, action) => {
+      state.activeFilter = action.payload;
+    },
+    resetAllBudget: () => initialState,
   },
 });
 
@@ -33,7 +36,8 @@ export const {
   updateUserName,
   updateMonthlyBudget,
   updateCategoricalBudget,
-  resetUser,
+  updateActiveFilter,
+  resetAllBudget,
 } = userSlice.actions;
 
 export default userSlice.reducer;
