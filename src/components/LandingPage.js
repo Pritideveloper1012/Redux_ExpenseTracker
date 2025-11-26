@@ -23,38 +23,36 @@ const LandingPage = () => {
   const [travel, setTravel] = useState("");
   const [entertainment, setEntertainment] = useState("");
 
- const handleSubmit = (e) => {
-  e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  if (!name || !budget || !food || !travel || !entertainment) {
-    alert("All fields are required");
-    return;
-  }
+    if (!name || !budget || !food || !travel || !entertainment) {
+      alert("All fields are required");
+      return;
+    }
 
-  const total = Number(budget);
-  const foodBudget = Number(food);
-  const travelBudget = Number(travel);
-  const entertainmentBudget = Number(entertainment);
-  const others = total - (foodBudget + travelBudget + entertainmentBudget);
+    const total = Number(budget);
+    const foodBudget = Number(food);
+    const travelBudget = Number(travel);
+    const entertainmentBudget = Number(entertainment);
 
-  dispatch(updateUserName(name));
-  dispatch(updateMonthlyBudget(total));
-  dispatch(
-    updateCategoricalBudget({
-      food: foodBudget,
-      travel: travelBudget,
-      entertainment: entertainmentBudget,
-      others,
-    })
-  );
-  dispatch(resetAllExpense());
+    const sum = foodBudget + travelBudget + entertainmentBudget;
+    const others = total - sum;
 
-  // Only navigate if not running Cypress
-  if (!window.Cypress) {
-    navigate("/transactions");
-  }
-};
+    dispatch(updateUserName(name));
+    dispatch(updateMonthlyBudget(total));
+    dispatch(
+      updateCategoricalBudget({
+        food: foodBudget,
+        travel: travelBudget,
+        entertainment: entertainmentBudget,
+        others,
+      })
+    );
+    dispatch(resetAllExpense());
 
+    navigate("/tracker");
+  };
 
   return (
     <div className="landing-page">
