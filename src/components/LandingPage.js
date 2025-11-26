@@ -18,7 +18,7 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
-  const [budget, setBudget] = useState("");
+  const [totalBudget, setTotalBudget] = useState("");
   const [food, setFood] = useState("");
   const [travel, setTravel] = useState("");
   const [entertainment, setEntertainment] = useState("");
@@ -26,18 +26,17 @@ const LandingPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!name || !budget || !food || !travel || !entertainment) {
+    if (!name || !totalBudget || !food || !travel || !entertainment) {
       alert("All fields are required");
       return;
     }
 
-    const total = Number(budget);
+    const total = Number(totalBudget);
     const foodBudget = Number(food);
     const travelBudget = Number(travel);
     const entertainmentBudget = Number(entertainment);
 
-    const sumCategories =
-      foodBudget + travelBudget + entertainmentBudget;
+    const sumCategories = foodBudget + travelBudget + entertainmentBudget;
     const others = total - sumCategories;
 
     dispatch(updateUserName(name));
@@ -50,8 +49,8 @@ const LandingPage = () => {
         others,
       })
     );
-
     dispatch(resetAllExpense());
+
     navigate("/tracker");
   };
 
@@ -68,15 +67,15 @@ const LandingPage = () => {
         />
 
         <input
-          id="budget"
+          id="total-budget"
           placeholder="Total Budget"
           type="number"
-          value={budget}
-          onChange={(e) => setBudget(e.target.value)}
+          value={totalBudget}
+          onChange={(e) => setTotalBudget(e.target.value)}
         />
 
         <input
-          id="food"
+          id="food-budget"
           placeholder="Food"
           type="number"
           value={food}
@@ -84,7 +83,7 @@ const LandingPage = () => {
         />
 
         <input
-          id="travel"
+          id="travel-budget"
           placeholder="Travel"
           type="number"
           value={travel}
@@ -92,7 +91,7 @@ const LandingPage = () => {
         />
 
         <input
-          id="entertainment"
+          id="entertainment-budget"
           placeholder="Entertainment"
           type="number"
           value={entertainment}
