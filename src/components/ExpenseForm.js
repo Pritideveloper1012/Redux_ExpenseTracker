@@ -3,8 +3,12 @@ import { useDispatch } from "react-redux";
 import {
   updateTotalExpense,
   updateCategoricalExpense,
+  resetAllExpense,
 } from "../redux/expenseSlice";
-import { addTransactionEntry } from "../redux/transactionSlice";
+import {
+  addTransactionEntry,
+  removeAllTransactions,
+} from "../redux/transactionSlice";
 
 function ExpenseForm() {
   const dispatch = useDispatch();
@@ -32,9 +36,7 @@ function ExpenseForm() {
     };
 
     dispatch(addTransactionEntry(transaction));
-
     dispatch(updateTotalExpense({ amount: amt, operation: "add" }));
-
     dispatch(
       updateCategoricalExpense({
         category: expense.category,
@@ -43,6 +45,15 @@ function ExpenseForm() {
       })
     );
 
+    setExpense({ name: "", amount: "", category: "food" });
+  };
+
+  const handleReset = () => {
+    // Reset all Redux state
+    dispatch(removeAllTransactions());
+    dispatch(resetAllExpense());
+
+    // Reset local form state
     setExpense({ name: "", amount: "", category: "food" });
   };
 
@@ -78,6 +89,11 @@ function ExpenseForm() {
 
         <button id="add-expense" type="submit">
           Add Expense
+        </button>
+
+        {/* RESET BUTTON for Cypress */}
+        <button id="clear" type="button" onClick={handleReset}>
+          Reset All
         </button>
       </form>
     </div>
