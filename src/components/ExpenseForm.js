@@ -1,68 +1,79 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addTransactionEntry } from "../redux/transactionSlice";
-import { updateCategoricalExpense, updateTotalExpense } from "../redux/expenseSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addTransactionEntry,
+} from "../redux/transactionSlice";
+import {
+  updateTotalExpense,
+  updateCategoricalExpense,
+} from "../redux/expenseSlice";
 
 const ExpenseForm = () => {
   const dispatch = useDispatch();
-  const [expenseName, setExpenseName] = useState("");
-  const [expenseCategory, setExpenseCategory] = useState("food");
-  const [budget, setBudget] = useState(0); // Cypress expects input#budget
+  const categoricalBudget = useSelector((state) => state.user.categoricalBudget);
 
-  const handleAddExpense = (e) => {
+  const [expenseName, setExpenseName] = useState("");
+  const [category, setCategory] = useState("food");
+  const [amount, setAmount] = useState(0);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!expenseName || !budget) {
+    if (!expenseName || !amount) {
       alert("All fields are required");
       return;
     }
 
-    const amount = Number(budget);
+    if (amount > categoricalBudget[category]) {
+      const proceed = window.confirm(
+        "Expense exceeds budget for this category. OK to add anyway?"
+      );
+      if (!proceed) return;
+    }
 
-    dispatch(
-      addTransactionEntry({
-        id: Date.now(),
-        name: expenseName,
-        category: expenseCategory,
-        amount,
-      })
-    );
+    dispatch(addTransactionEntry({ name: expenseName, category, amount }));
+    dispatch(updateTotalExpense(amount));
+    dispatch(updateCategoricalExpense({ category, amount }));
 
-    dispatch(updateCategoricalExpense({ category: expenseCategory, amount }));
-
+    // Reset form
     setExpenseName("");
-    setBudget(0);
+    setCategory("food");
+    setAmount(0);
   };
 
   return (
-    <div className="expense-form-wrapper">
-      <h2>Add Expense</h2>
-      <form id="expense-form1" className="expense-form1" onSubmit={handleAddExpense}>
+    <div>
+      <h2 className="title">New Expense Form</h2>
+      <form id="expense-form1" onSubmit={handleSubmit}>
+        <label htmlFor="expense-name">Expense Name</label>
         <input
           id="expense-name"
           type="text"
-          placeholder="Expense Name"
           value={expenseName}
           onChange={(e) => setExpenseName(e.target.value)}
         />
-        <input
-          id="budget" // MUST match Cypress
-          type="number"
-          placeholder="Amount"
-          value={budget}
-          onChange={(e) => setBudget(e.target.value)}
-        />
+
+        <label htmlFor="category-select">Category</label>
         <select
           id="category-select"
-          value={expenseCategory}
-          onChange={(e) => setExpenseCategory(e.target.value)}
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
         >
           <option value="food">Food</option>
           <option value="travel">Travel</option>
           <option value="entertainment">Entertainment</option>
           <option value="other">Other</option>
         </select>
-        <button type="submit">Add</button>
+
+        <label htmlFor="expense-amount">Amount</label>
+        <input
+          id="expense-amount"
+          type="number"
+          value={amount || ""}
+          onChange={(e) => setAmount(Number(e.target.value))}
+        />
+
+        <button type="submit">Add Expense</button>
       </form>
     </div>
   );
