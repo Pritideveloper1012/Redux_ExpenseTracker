@@ -1,57 +1,68 @@
+// src/components/ExpenseForm.js
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addTransactionEntry } from "../redux/transactionSlice";
-import store from "../redux/store";
-
-if (window.Cypress && !window.store) {
-  window.store = store;
-}
+import { useDispatch } from "react-redux";
+import { addExpense } from "../redux/expenseSlice";
 
 const ExpenseForm = () => {
   const dispatch = useDispatch();
-  const transactions = useSelector((state) => state.transactions.transactions);
-  const categories = useSelector((state) => state.expense.categoricalExpense);
 
-  const [name, setName] = useState("");
-  const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState("food");
-
-  const categorySpent = { food: 0, travel: 0, entertainment: 0, others: 0 };
-  transactions.forEach((tx) => categorySpent[tx.category] += tx.amount);
+  const [expenseName, setExpenseName] = useState("");
+  const [expenseAmount, setExpenseAmount] = useState("");
+  const [expenseCategory, setExpenseCategory] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name || !amount || !category) {
-      alert("All fields are required");
+
+    if (!expenseName || !expenseAmount || !expenseCategory) {
       return;
     }
 
-    const numAmount = Number(amount);
-    if (categorySpent[category] + numAmount > categories[category]) {
-      const confirmAdd = window.confirm("Expense exceeds category budget. Do you want to add it?");
-      if (!confirmAdd) return;
-    }
+    dispatch(
+      addExpense({
+        name: expenseName,
+        amount: Number(expenseAmount),
+        category: expenseCategory,
+      })
+    );
 
-    dispatch(addTransactionEntry({ id: Date.now(), name, category, amount: numAmount }));
-    setName("");
-    setAmount("");
+    setExpenseName("");
+    setExpenseAmount("");
+    setExpenseCategory("");
   };
 
   return (
-    <section className="new-expense">
-      <h2>New Expense Form</h2>
-      <form id="expense-form1" onSubmit={handleSubmit}>
-        <input placeholder="Expense Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option value="food">Food</option>
-          <option value="travel">Travel</option>
-          <option value="entertainment">Entertainment</option>
-          <option value="others">Other</option>
-        </select>
-        <input placeholder="Amount" type="number" value={amount} onChange={(e) => setAmount(e.target.value)} />
-        <button type="submit">Submit</button>
-      </form>
-    </section>
+    <form className="expense-form1" onSubmit={handleSubmit}>
+      <input
+        id="expense-name"
+        placeholder="Expense Name"
+        value={expenseName}
+        onChange={(e) => setExpenseName(e.target.value)}
+      />
+
+      <input
+        id="expense-amount"
+        placeholder="Amount"
+        type="number"
+        value={expenseAmount}
+        onChange={(e) => setExpenseAmount(e.target.value)}
+      />
+
+      <select
+        id="expense-category"
+        value={expenseCategory}
+        onChange={(e) => setExpenseCategory(e.target.value)}
+      >
+        <option value="">Select Category</option>
+        <option value="food">Food</option>
+        <option value="travel">Travel</option>
+        <option value="entertainment">Entertainment</option>
+        <option value="others">Others</option>
+      </select>
+
+      <button id="expense-submit" type="submit">
+        Add Expense
+      </button>
+    </form>
   );
 };
 

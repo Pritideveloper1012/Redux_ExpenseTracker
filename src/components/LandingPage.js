@@ -1,3 +1,4 @@
+// src/pages/LandingPage.js
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -5,6 +6,7 @@ import {
   updateUserName,
   updateMonthlyBudget,
   updateCategoricalBudget,
+  resetAllBudget,
 } from "../redux/userSlice";
 import { resetAllExpense } from "../redux/expenseSlice";
 import store from "../redux/store";
@@ -18,7 +20,7 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
-  const [budget, setBudget] = useState("");
+  const [totalBudget, setTotalBudget] = useState("");
   const [food, setFood] = useState("");
   const [travel, setTravel] = useState("");
   const [entertainment, setEntertainment] = useState("");
@@ -26,19 +28,21 @@ const LandingPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!name || !budget || !food || !travel || !entertainment) {
+    if (!name || !totalBudget || !food || !travel || !entertainment) {
       alert("All fields are required");
       return;
     }
 
-    const total = Number(budget);
+    const total = Number(totalBudget);
     const foodBudget = Number(food);
     const travelBudget = Number(travel);
     const entertainmentBudget = Number(entertainment);
 
-    const sumCategories =
-      foodBudget + travelBudget + entertainmentBudget;
+    const sumCategories = foodBudget + travelBudget + entertainmentBudget;
     const others = total - sumCategories;
+
+    dispatch(resetAllBudget());
+    dispatch(resetAllExpense());
 
     dispatch(updateUserName(name));
     dispatch(updateMonthlyBudget(total));
@@ -51,7 +55,6 @@ const LandingPage = () => {
       })
     );
 
-    dispatch(resetAllExpense());
     navigate("/tracker");
   };
 
@@ -59,24 +62,21 @@ const LandingPage = () => {
     <div className="landing-page">
       <h1>Expense Tracker</h1>
 
-      <form id="landing-page-form" onSubmit={handleSubmit}>
+      <form name="landing-page-form" onSubmit={handleSubmit}>
         <input
-          id="name"
           placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
 
         <input
-          id="budget"
           placeholder="Total Budget"
           type="number"
-          value={budget}
-          onChange={(e) => setBudget(e.target.value)}
+          value={totalBudget}
+          onChange={(e) => setTotalBudget(e.target.value)}
         />
 
         <input
-          id="food"
           placeholder="Food"
           type="number"
           value={food}
@@ -84,7 +84,6 @@ const LandingPage = () => {
         />
 
         <input
-          id="travel"
           placeholder="Travel"
           type="number"
           value={travel}
@@ -92,7 +91,6 @@ const LandingPage = () => {
         />
 
         <input
-          id="entertainment"
           placeholder="Entertainment"
           type="number"
           value={entertainment}
