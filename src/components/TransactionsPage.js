@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  updateTotalExpense,
+  updateTotalExpense, // <-- This is needed
   updateCategoricalExpense,
 } from "../redux/expenseSlice";
 import {
@@ -55,6 +55,14 @@ const TransactionsPage = () => {
       })
     );
 
+    // ✅ FIX 1: Dispatch to update TOTAL expense (ADD)
+    dispatch(
+      updateTotalExpense({
+        amount,
+        operation: "add",
+      })
+    );
+
     dispatch(
       updateCategoricalExpense({
         category: expenseCategory,
@@ -69,6 +77,15 @@ const TransactionsPage = () => {
 
   const handleDelete = (id, category, amount) => {
     dispatch(removeTransactionEntry(id));
+    
+    // ✅ FIX 2: Dispatch to update TOTAL expense (SUBTRACT)
+    dispatch(
+      updateTotalExpense({
+        amount,
+        operation: "subtract",
+      })
+    );
+    
     dispatch(
       updateCategoricalExpense({ category, amount, operation: "subtract" })
     );

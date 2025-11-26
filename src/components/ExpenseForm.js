@@ -1,4 +1,4 @@
-// ExpenseForm.jsx (Updated code)
+// ExpenseForm.jsx (Final Updated code for Cypress compatibility)
 
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -60,11 +60,10 @@ function ExpenseForm() {
   };
 
   return (
-    // 💡 Added id="expense-form-container" for better Cypress targeting 
-    // and ensuring the component is correctly rendered on /tracker page.
+    // Added ID for better Cypress targeting
     <div className="expense-form1" id="expense-form-container"> 
-      {/* 💡 If div.title is missing, maybe add it here to pass Test 2 */}
-      {/* <div className="title">Add New Expense</div> */} 
+      {/* ✅ FIX: Added div.title to resolve 'should render the form' failure */}
+      <div className="title">Expense Details</div> 
       
       <form onSubmit={handleSubmit}>
         <input
@@ -72,14 +71,16 @@ function ExpenseForm() {
           name="name"
           value={expense.name}
           onChange={handleChange}
+          placeholder="Expense Name" // Added placeholder for clarity
         />
-        {/* ... (remaining inputs and buttons) ... */}
+        
         <input
           id="expense-amount"
           type="number"
           name="amount"
           value={expense.amount}
           onChange={handleChange}
+          placeholder="Amount" // Added placeholder for clarity
         />
 
         <select
