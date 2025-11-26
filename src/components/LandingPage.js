@@ -4,7 +4,7 @@ import {
   updateUserName,
   updateMonthlyBudget,
   updateCategoricalBudget,
-  resetAllBudget,
+  resetAllBudget
 } from "../redux/userSlice";
 import { removeAllTransactions } from "../redux/transactionSlice";
 import { resetAllExpense } from "../redux/expenseSlice";
@@ -16,10 +16,10 @@ function LandingPageForm() {
 
   const [form, setForm] = useState({
     name: "",
-    monthlyBudget: "",
+    budget: "",
     food: "",
     travel: "",
-    entertainment: "",
+    entertainment: ""
   });
 
   const handleChange = (e) => {
@@ -30,16 +30,16 @@ function LandingPageForm() {
     e.preventDefault();
 
     dispatch(updateUserName(form.name));
-    dispatch(updateMonthlyBudget(form.monthlyBudget));
+    dispatch(updateMonthlyBudget(form.budget));
     dispatch(
       updateCategoricalBudget({
         food: form.food,
         travel: form.travel,
-        entertainment: form.entertainment,
+        entertainment: form.entertainment
       })
     );
 
-    navigate("/transactions"); // ⭐ Cypress expects THIS route
+    navigate("/transactions");
   };
 
   const handleReset = () => {
@@ -49,39 +49,50 @@ function LandingPageForm() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input id="name" name="name" value={form.name} onChange={handleChange} />
-        <input
-          id="monthly-budget"
-          name="monthlyBudget"
-          value={form.monthlyBudget}
-          onChange={handleChange}
-        />
+    <form onSubmit={handleSubmit}>
+      <input
+        id="name"
+        name="name"
+        value={form.name}
+        onChange={handleChange}
+      />
 
-        <input id="food" name="food" value={form.food} onChange={handleChange} />
-        <input
-          id="travel"
-          name="travel"
-          value={form.travel}
-          onChange={handleChange}
-        />
-        <input
-          id="entertainment"
-          name="entertainment"
-          value={form.entertainment}
-          onChange={handleChange}
-        />
+      <input
+        id="budget"
+        name="budget"
+        value={form.budget}
+        onChange={handleChange}
+      />
 
-        <button id="new-update" type="submit">
-          New/Update tracker
-        </button>
+      <input
+        id="food-budget"
+        name="food"
+        value={form.food}
+        onChange={handleChange}
+      />
 
-        <button id="reset-button" type="button" onClick={handleReset}>
-          Reset
-        </button>
-      </form>
-    </div>
+      <input
+        id="travel-budget"
+        name="travel"
+        value={form.travel}
+        onChange={handleChange}
+      />
+
+      <input
+        id="entertainment-budget"
+        name="entertainment"
+        value={form.entertainment}
+        onChange={handleChange}
+      />
+
+      <button id="new-update" type="submit">
+        New/Update tracker
+      </button>
+
+      <button id="reset-button" type="button" onClick={handleReset}>
+        Reset
+      </button>
+    </form>
   );
 }
 
