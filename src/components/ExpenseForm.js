@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTransactionEntry } from "../redux/transactionSlice";
 
+import store from "../redux/store";
+
+if (window.Cypress && !window.store) {
+  window.store = store;
+}
+
+
 const ExpenseForm = () => {
   const dispatch = useDispatch();
   const transactions = useSelector((state) => state.transactions.transactions);

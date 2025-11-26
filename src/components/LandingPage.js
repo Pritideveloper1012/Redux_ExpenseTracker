@@ -5,6 +5,12 @@ import { useNavigate } from "react-router-dom";
 // Redux actions
 import { updateUserName, updateMonthlyBudget, updateCategoricalBudget } from "../redux/userSlice";
 import { resetAllExpense } from "../redux/expenseSlice";
+import store from "../redux/store";
+
+if (window.Cypress && !window.store) {
+  window.store = store;
+}
+
 
 const LandingPage = () => {
   const dispatch = useDispatch();
