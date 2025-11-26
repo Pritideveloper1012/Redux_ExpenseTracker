@@ -50,11 +50,9 @@ const LandingPage = () => {
         others,
       })
     );
-    // यह action transactions को reset करता है।
     dispatch(resetAllExpense());
 
-    // ✅ FIX ADDED HERE: Form fields ki local state ko reset kiya gaya hai.
-    // This is done to satisfy the failing Cypress test which expects empty fields after form submission.
+    // FIX: Reset local form state after submission (for passing the failing test)
     setName("");
     setBudget("");
     setFood("");
@@ -66,7 +64,8 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="landing-page">
+    // FIX: Added ID to main div for better Cypress visibility/targeting
+    <div className="landing-page" id="landing-page-container"> 
       <h1>Expense Tracker</h1>
 
       <form id="landing-page-form" onSubmit={handleSubmit}>
