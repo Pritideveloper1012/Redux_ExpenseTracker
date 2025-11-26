@@ -4,9 +4,11 @@ import {
   updateUserName,
   updateMonthlyBudget,
   updateCategoricalBudget,
-  removeAllTransactions,
+  
 } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
+import { removeAllTransactions } from "../redux/transactionSlice";
+
 
 const LandingPage = () => {
   const dispatch = useDispatch();
