@@ -1,93 +1,87 @@
-// src/components/LandingPageForm.js
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateUserName, updateMonthlyBudget, updateCategoricalBudget } from "../redux/userSlice";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
-const LandingPageForm = () => {
+const LandingPage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [name, setName] = useState("");
-  const [totalBudget, setTotalBudget] = useState("");
-  const [foodBudget, setFoodBudget] = useState("");
-  const [travelBudget, setTravelBudget] = useState("");
-  const [entertainmentBudget, setEntertainmentBudget] = useState("");
+  const [budget, setBudget] = useState(0);
+  const [foodBudget, setFoodBudget] = useState(0);
+  const [travelBudget, setTravelBudget] = useState(0);
+  const [entertainmentBudget, setEntertainmentBudget] = useState(0);
 
-  const handleSubmit = (e) => {
+   const handleSubmit = (e) => {
     e.preventDefault();
+    // form validations...
 
-    if (!name || !totalBudget || !foodBudget || !travelBudget || !entertainmentBudget) {
+    Navigate("/transactions"); // 
+  
+
+    if (!name || !budget) {
       alert("All fields are required");
       return;
     }
 
-    const total = Number(totalBudget);
-    const food = Number(foodBudget);
-    const travel = Number(travelBudget);
-    const entertainment = Number(entertainmentBudget);
-
-    if (food + travel + entertainment > total) {
-      alert("Category budgets exceed total budget");
-      return;
-    }
-
-    // Redux dispatch
+    // Dispatch user info
     dispatch(updateUserName(name));
-    dispatch(updateMonthlyBudget(total));
-    dispatch(updateCategoricalBudget({
-      food,
-      travel,
-      entertainment
-    }));
+    dispatch(updateMonthlyBudget(Number(budget)));
+    dispatch(
+      updateCategoricalBudget({
+        food: Number(foodBudget),
+        travel: Number(travelBudget),
+        entertainment: Number(entertainmentBudget),
+      })
+    );
 
-    // Navigate to Transactions Page
-    navigate("/transactions");
+    // Navigate to Transactions page (dummy here)
+    window.location.href = "/transactions";
   };
 
   return (
     <div className="landing-page">
       <h1>Welcome to Expense Tracker</h1>
-      <form onSubmit={handleSubmit} id="landing-form">
+      <form id="landing-form" onSubmit={handleSubmit}>
         <input
           id="name"
           type="text"
-          placeholder="Enter your name"
+          placeholder="Enter Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
         <input
-          id="total-budget"
+          id="budget" // MUST match Cypress
           type="number"
-          placeholder="Total Budget"
-          value={totalBudget}
-          onChange={(e) => setTotalBudget(e.target.value)}
+          placeholder="Enter Monthly Budget"
+          value={budget}
+          onChange={(e) => setBudget(e.target.value)}
         />
         <input
-          id="food-budget"
+          id="food"
           type="number"
           placeholder="Food Budget"
           value={foodBudget}
           onChange={(e) => setFoodBudget(e.target.value)}
         />
         <input
-          id="travel-budget"
+          id="travel"
           type="number"
           placeholder="Travel Budget"
           value={travelBudget}
           onChange={(e) => setTravelBudget(e.target.value)}
         />
         <input
-          id="entertainment-budget"
+          id="entertainment"
           type="number"
           placeholder="Entertainment Budget"
           value={entertainmentBudget}
           onChange={(e) => setEntertainmentBudget(e.target.value)}
         />
-        <button type="submit" id="start-btn">Start Tracker</button>
+        <button type="submit">Start Tracker</button>
       </form>
     </div>
   );
 };
 
-export default LandingPageForm;
+export default LandingPage;
