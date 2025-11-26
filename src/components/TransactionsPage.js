@@ -95,7 +95,7 @@ const TransactionsPage = () => {
 
   const handleNewTracker = () => {
     dispatch(removeAllTransactions());
-    // ✅ FIX 3: window.location.reload() ki jagah navigate use karein.
+    //  FIX 3: window.location.reload() ki jagah navigate use karein.
     // LandingPageForm reset test fail ho raha tha. Isse use '/' par redirect karna chahiye.
     navigate("/"); 
   };
@@ -114,8 +114,8 @@ const TransactionsPage = () => {
         <form className="expense-form1" onSubmit={handleAddExpense}>
           <label htmlFor="transaction-expense-name">Expense Name</label>
           <input
-            // ✅ FIX 4: ID change kiya taki LandingPage ID se clash na ho (input#name fix)
-            id="transaction-expense-name" 
+            // FIX 4: ID change kiya taki LandingPage ID se clash na ho (input#name fix)
+            id="expense-name" 
             type="text"
             value={expenseName}
             onChange={(e) => setExpenseName(e.target.value)}
