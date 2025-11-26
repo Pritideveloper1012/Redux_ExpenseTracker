@@ -103,9 +103,29 @@ const LandingPage = () => {
         </button>
       </form>
 
-      <button id="clear" onClick={() => window.location.reload()}>
-        Start new tracker
-      </button>
+      <button
+  id="clear"
+  onClick={() => {
+    setName("");
+    setBudget("");
+    setFood("");
+    setTravel("");
+    setEntertainment("");
+    dispatch(resetAllExpense());
+    // if you also need to reset user info:
+    dispatch(updateUserName(""));
+    dispatch(updateMonthlyBudget(0));
+    dispatch(updateCategoricalBudget({
+      food: 0,
+      travel: 0,
+      entertainment: 0,
+      others: 0,
+    }));
+  }}
+>
+  Start new tracker
+</button>
+
     </div>
   );
 };
