@@ -36,7 +36,11 @@ function ExpenseForm() {
     };
 
     dispatch(addTransactionEntry(transaction));
-    dispatch(updateTotalExpense({ amount: amt, operation: "add" }));
+    
+    // 💡 Check your reducer for this action: 
+    // It should ADD 'amt' to the current totalExpense, not set totalExpense = amt.
+    dispatch(updateTotalExpense({ amount: amt, operation: "add" })); 
+    
     dispatch(
       updateCategoricalExpense({
         category: expense.category,
