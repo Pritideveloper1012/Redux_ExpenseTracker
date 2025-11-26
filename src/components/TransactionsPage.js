@@ -4,7 +4,6 @@ import {
   updateTotalExpense,
   updateCategoricalExpense,
 } from "../redux/expenseSlice";
-
 import {
   addTransactionEntry,
   removeTransactionEntry,
@@ -13,37 +12,39 @@ import {
 
 const TransactionsPage = () => {
   const dispatch = useDispatch();
-
-  const user = useSelector((state) => state.user);
-  const budget = useSelector((state) => state.expenses);
+  const user = useSelector((state) => state.user) || { userName: "" };
+  const budget =
+    useSelector((state) => state.expenses) || {
+      totalExpense: 0,
+      categoricalExpense: { food: 0, travel: 0, entertainment: 0, others: 0 },
+    };
   const transactions = useSelector(
-    (state) => state.transactions.transactions
-  );
+    (state) => state.transactions.transactionList
+  ) || [];
 
   const [expenseName, setExpenseName] = useState("");
-  const [expenseCategory, setExpenseCategory] = useState("");
+  const [expenseCategory, setExpenseCategory] = useState("food");
   const [expenseAmount, setExpenseAmount] = useState("");
+  const [filter, setFilter] = useState("All");
 
-  const categorySpent = {
-    food: 0,
-    travel: 0,
-    entertainment: 0,
-    others: 0,
-  };
-
+  const categorySpent = { food: 0, travel: 0, entertainment: 0, others: 0 };
   transactions.forEach((tx) => {
     categorySpent[tx.category] += tx.amount;
   });
 
   const handleAddExpense = (e) => {
     e.preventDefault();
-
-    if (!expenseName || !expenseAmount || !expenseCategory) {
+    if (!expenseName || !expenseAmount) {
       alert("All fields are required");
       return;
     }
 
     const amount = Number(expenseAmount);
+
+    // Check category budget
+    if (categorySpent[expenseCategory] + amount > budget.categoricalExpense[expenseCategory]) {
+      if (!window.confirm("Expense exceeds category budget. Continue?")) return;
+    }
 
     dispatch(
       addTransactionEntry({
@@ -58,81 +59,84 @@ const TransactionsPage = () => {
       updateCategoricalExpense({
         category: expenseCategory,
         amount,
+        operation: "add",
       })
     );
 
     setExpenseName("");
     setExpenseAmount("");
-    setExpenseCategory("");
   };
 
   const handleDelete = (id, category, amount) => {
     dispatch(removeTransactionEntry(id));
     dispatch(
-      updateCategoricalExpense({
-        category,
-        amount: -amount,
-      })
+      updateCategoricalExpense({ category, amount, operation: "subtract" })
     );
   };
 
-  const handleClear = () => {
+  const handleNewTracker = () => {
     dispatch(removeAllTransactions());
     window.location.reload();
   };
 
+  const filteredTransactions =
+    filter === "All"
+      ? transactions
+      : transactions.filter((tx) => tx.category === filter.toLowerCase());
+
   return (
     <div className="transactions-page">
-      <header>
-        <h1>{user.userName}'s Expense Tracker</h1>
+      <h1>{user.userName || "User"} Expense Tracker</h1>
 
-        <button id="new-update">Update Tracker</button>
-        <button id="clear" onClick={handleClear}>
-          Start New Tracker
-        </button>
-      </header>
-
-      {/* Expense Form → MUST match Cypress selectors */}
-      <section>
-        <h2>Add Expense</h2>
-
+      <section className="new-expense">
+        <h2 className="title">New Expense Form</h2>
         <form className="expense-form1" onSubmit={handleAddExpense}>
+          <label htmlFor="expense-name">Expense Name</label>
           <input
             id="expense-name"
-            placeholder="Expense Name"
+            type="text"
             value={expenseName}
             onChange={(e) => setExpenseName(e.target.value)}
           />
 
-          <input
-            id="expense-amount"
-            type="number"
-            placeholder="Amount"
-            value={expenseAmount}
-            onChange={(e) => setExpenseAmount(e.target.value)}
-          />
-
+          <label htmlFor="category-select">Category</label>
           <select
-            id="expense-category"
+            id="category-select"
             value={expenseCategory}
             onChange={(e) => setExpenseCategory(e.target.value)}
           >
-            <option value="">Select Category</option>
             <option value="food">Food</option>
             <option value="travel">Travel</option>
             <option value="entertainment">Entertainment</option>
             <option value="others">Others</option>
           </select>
 
-          <button id="expense-submit" type="submit">
-            Add Expense
-          </button>
+          <label htmlFor="expense-amount">Amount</label>
+          <input
+            id="expense-amount"
+            type="number"
+            value={expenseAmount}
+            onChange={(e) => setExpenseAmount(e.target.value)}
+          />
+
+          <button type="submit">Add</button>
         </form>
       </section>
 
-      {/* Transactions Table */}
-      <section>
-        <h2>Transactions</h2>
+      <button id="clear" onClick={handleNewTracker}>
+        Start New Tracker
+      </button>
+
+      <div className="filters">
+        {["All", "Food", "Travel", "Entertainment", "Others"].map((f) => (
+          <button key={f} onClick={() => setFilter(f)}>
+            {f}
+          </button>
+        ))}
+      </div>
+
+      <section className="expenses-table">
+        <h2>Expenses</h2>
         <table>
           <thead>
             <tr>
@@ -143,9 +147,8 @@ const TransactionsPage = () => {
               <th>Action</th>
             </tr>
           </thead>
-
           <tbody>
-            {transactions.map((tx, index) => (
+            {filteredTransactions.map((tx, index) => (
               <tr key={tx.id}>
                 <td>{index + 1}</td>
                 <td>{tx.name}</td>
@@ -153,9 +156,7 @@ const TransactionsPage = () => {
                 <td>{tx.amount}</td>
                 <td>
                   <button
-                    onClick={() =>
-                      handleDelete(tx.id, tx.category, tx.amount)
-                    }
+                    onClick={() => handleDelete(tx.id, tx.category, tx.amount)}
                   >
                     Delete
                   </button>
