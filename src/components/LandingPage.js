@@ -1,99 +1,114 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   updateUserName,
   updateMonthlyBudget,
   updateCategoricalBudget,
-  resetAllBudget
 } from "../redux/userSlice";
-import { removeAllTransactions } from "../redux/transactionSlice";
 import { resetAllExpense } from "../redux/expenseSlice";
-import { useNavigate } from "react-router-dom";
+import store from "../redux/store";
 
-function LandingPageForm() {
+if (window.Cypress && !window.store) {
+  window.store = store;
+}
+
+const LandingPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    name: "",
-    budget: "",
-    food: "",
-    travel: "",
-    entertainment: ""
-  });
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const [name, setName] = useState("");
+  const [budget, setBudget] = useState("");
+  const [food, setFood] = useState("");
+  const [travel, setTravel] = useState("");
+  const [entertainment, setEntertainment] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(updateUserName(form.name));
-    dispatch(updateMonthlyBudget(form.budget));
+    if (!name || !budget || !food || !travel || !entertainment) {
+      alert("All fields are required");
+      return;
+    }
+
+    const total = Number(budget);
+    const foodBudget = Number(food);
+    const travelBudget = Number(travel);
+    const entertainmentBudget = Number(entertainment);
+
+    const sumCategories =
+      foodBudget + travelBudget + entertainmentBudget;
+    const others = total - sumCategories;
+
+    dispatch(updateUserName(name));
+    dispatch(updateMonthlyBudget(total));
     dispatch(
       updateCategoricalBudget({
-        food: form.food,
-        travel: form.travel,
-        entertainment: form.entertainment
+        food: foodBudget,
+        travel: travelBudget,
+        entertainment: entertainmentBudget,
+        others,
       })
     );
 
-    navigate("/transactions");
-  };
-
-  const handleReset = () => {
-    dispatch(resetAllBudget());
-    dispatch(removeAllTransactions());
     dispatch(resetAllExpense());
+    navigate("/tracker");
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        id="name"
-        name="name"
-        value={form.name}
-        onChange={handleChange}
-      />
+    <div className="landing-page">
+      <h1>Expense Tracker</h1>
 
-      <input
-        id="budget"
-        name="budget"
-        value={form.budget}
-        onChange={handleChange}
-      />
+      <form id="landing-page-form" onSubmit={handleSubmit}>
+        <input
+          id="name"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
 
-      <input
-        id="food-budget"
-        name="food"
-        value={form.food}
-        onChange={handleChange}
-      />
+        <input
+          id="budget"
+          placeholder="Total Budget"
+          type="number"
+          value={budget}
+          onChange={(e) => setBudget(e.target.value)}
+        />
 
-      <input
-        id="travel-budget"
-        name="travel"
-        value={form.travel}
-        onChange={handleChange}
-      />
+        <input
+          id="food"
+          placeholder="Food"
+          type="number"
+          value={food}
+          onChange={(e) => setFood(e.target.value)}
+        />
 
-      <input
-        id="entertainment-budget"
-        name="entertainment"
-        value={form.entertainment}
-        onChange={handleChange}
-      />
+        <input
+          id="travel"
+          placeholder="Travel"
+          type="number"
+          value={travel}
+          onChange={(e) => setTravel(e.target.value)}
+        />
 
-      <button id="new-update" type="submit">
-        New/Update tracker
+        <input
+          id="entertainment"
+          placeholder="Entertainment"
+          type="number"
+          value={entertainment}
+          onChange={(e) => setEntertainment(e.target.value)}
+        />
+
+        <button id="new-update" type="submit">
+          New/Update tracker
+        </button>
+      </form>
+
+      <button id="clear" onClick={() => window.location.reload()}>
+        Start new tracker
       </button>
-
-      <button id="reset-button" type="button" onClick={handleReset}>
-        Reset
-      </button>
-    </form>
+    </div>
   );
-}
+};
 
-export default LandingPageForm;
+export default LandingPage;
