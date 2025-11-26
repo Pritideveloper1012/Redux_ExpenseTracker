@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  updateTotalExpense, // <-- This is needed
+  updateTotalExpense,
   updateCategoricalExpense,
 } from "../redux/expenseSlice";
 import {
@@ -9,9 +9,13 @@ import {
   removeTransactionEntry,
   removeAllTransactions,
 } from "../redux/transactionSlice";
+import { useNavigate } from "react-router-dom"; // ✅ FIX: useNavigate import kiya for proper routing
 
 const TransactionsPage = () => {
   const dispatch = useDispatch();
+  // ✅ FIX: useNavigate hook use karna zaroori hai for proper routing (Test 1 fix)
+  const navigate = useNavigate(); 
+  
   const user = useSelector((state) => state.user) || { userName: "" };
   const budget =
     useSelector((state) => state.expenses) || {
@@ -55,7 +59,6 @@ const TransactionsPage = () => {
       })
     );
 
-    // ✅ FIX 1: Dispatch to update TOTAL expense (ADD)
     dispatch(
       updateTotalExpense({
         amount,
@@ -78,7 +81,6 @@ const TransactionsPage = () => {
   const handleDelete = (id, category, amount) => {
     dispatch(removeTransactionEntry(id));
     
-    // ✅ FIX 2: Dispatch to update TOTAL expense (SUBTRACT)
     dispatch(
       updateTotalExpense({
         amount,
@@ -93,7 +95,9 @@ const TransactionsPage = () => {
 
   const handleNewTracker = () => {
     dispatch(removeAllTransactions());
-    window.location.reload();
+    // ✅ FIX 3: window.location.reload() ki jagah navigate use karein.
+    // LandingPageForm reset test fail ho raha tha. Isse use '/' par redirect karna chahiye.
+    navigate("/"); 
   };
 
   const filteredTransactions =
@@ -108,9 +112,10 @@ const TransactionsPage = () => {
       <section className="new-expense">
         <h2 className="title">New Expense Form</h2>
         <form className="expense-form1" onSubmit={handleAddExpense}>
-          <label htmlFor="expense-name">Expense Name</label>
+          <label htmlFor="transaction-expense-name">Expense Name</label>
           <input
-            id="expense-name"
+            // ✅ FIX 4: ID change kiya taki LandingPage ID se clash na ho (input#name fix)
+            id="transaction-expense-name" 
             type="text"
             value={expenseName}
             onChange={(e) => setExpenseName(e.target.value)}
