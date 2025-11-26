@@ -1,9 +1,14 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { updateUserName, updateMonthlyBudget, updateCategoricalBudget } from "../redux/userSlice";
+import {
+  updateUserName,
+  updateMonthlyBudget,
+  updateCategoricalBudget,
+} from "../redux/userSlice";
 import { resetAllExpense } from "../redux/expenseSlice";
+
 import store from "../redux/store";
 
 if (window.Cypress && !window.store) {
@@ -14,11 +19,16 @@ const LandingPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [totalBudget, setTotalBudget] = useState("");
-  const [food, setFood] = useState("");
-  const [travel, setTravel] = useState("");
-  const [entertainment, setEntertainment] = useState("");
+  // IMPORTANT FIX: Load default values from Redux initial state
+  const user = useSelector((state) => state.user);
+
+  const [name, setName] = useState(user.name);
+  const [totalBudget, setTotalBudget] = useState(user.monthlyBudget);
+  const [food, setFood] = useState(user.categories.food);
+  const [travel, setTravel] = useState(user.categories.travel);
+  const [entertainment, setEntertainment] = useState(
+    user.categories.entertainment
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -38,7 +48,8 @@ const LandingPage = () => {
       return;
     }
 
-    const sumCategories = foodBudget + travelBudget + entertainmentBudget;
+    const sumCategories =
+      foodBudget + travelBudget + entertainmentBudget;
 
     if (sumCategories > total) {
       alert("Total Categorical budget should not exceed monthly budget");
@@ -49,12 +60,14 @@ const LandingPage = () => {
 
     dispatch(updateUserName(name));
     dispatch(updateMonthlyBudget(total));
-    dispatch(updateCategoricalBudget({
-      food: foodBudget,
-      travel: travelBudget,
-      entertainment: entertainmentBudget,
-      other: others,
-    }));
+    dispatch(
+      updateCategoricalBudget({
+        food: foodBudget,
+        travel: travelBudget,
+        entertainment: entertainmentBudget,
+        other: others,
+      })
+    );
 
     dispatch(resetAllExpense());
 
@@ -68,27 +81,52 @@ const LandingPage = () => {
       <form name="landing-page-form" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Name:</label>
-          <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          <input
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </div>
 
         <div>
           <label htmlFor="budget">Total Budget:</label>
-          <input id="budget" type="number" value={totalBudget} onChange={(e) => setTotalBudget(e.target.value)} />
+          <input
+            id="budget"
+            type="number"
+            value={totalBudget}
+            onChange={(e) => setTotalBudget(e.target.value)}
+          />
         </div>
 
         <div>
           <label htmlFor="food">Food:</label>
-          <input id="food" type="number" value={food} onChange={(e) => setFood(e.target.value)} />
+          <input
+            id="food"
+            type="number"
+            value={food}
+            onChange={(e) => setFood(e.target.value)}
+          />
         </div>
 
         <div>
           <label htmlFor="travel">Travel:</label>
-          <input id="travel" type="number" value={travel} onChange={(e) => setTravel(e.target.value)} />
+          <input
+            id="travel"
+            type="number"
+            value={travel}
+            onChange={(e) => setTravel(e.target.value)}
+          />
         </div>
 
         <div>
           <label htmlFor="entertainment">Entertainment:</label>
-          <input id="entertainment" type="number" value={entertainment} onChange={(e) => setEntertainment(e.target.value)} />
+          <input
+            id="entertainment"
+            type="number"
+            value={entertainment}
+            onChange={(e) => setEntertainment(e.target.value)}
+          />
         </div>
 
         <button id="new-update" type="submit">
