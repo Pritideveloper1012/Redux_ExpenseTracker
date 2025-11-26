@@ -4,6 +4,7 @@ import {
   updateUserName,
   updateMonthlyBudget,
   updateCategoricalBudget,
+  resetTransactions
 } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
@@ -20,23 +21,12 @@ const LandingPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!name || !budget) {
-      alert("All fields are required");
-      return;
-    }
-
     const totalBudget = Number(budget);
     const totalCategories =
       Number(food || 0) + Number(travel || 0) + Number(entertainment || 0);
 
-    if (totalCategories > totalBudget) {
-      alert("Total Categorical budget should not exceed monthly budget");
-      return;
-    }
-
     const other = totalBudget - totalCategories;
 
-    // Dispatch data
     dispatch(updateUserName(name));
     dispatch(updateMonthlyBudget(totalBudget));
     dispatch(
@@ -51,41 +41,26 @@ const LandingPage = () => {
     navigate("/tracker");
   };
 
+  const handleClear = () => {
+    dispatch(resetTransactions());
+    setName("");
+    setBudget("");
+    setFood("");
+    setTravel("");
+    setEntertainment("");
+  };
+
   return (
     <div>
-      <h1>Welcome to Expense Tracker</h1>
       <form name="landing-page-form" onSubmit={handleSubmit}>
-        <input
-          id="name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          id="budget"
-          type="number"
-          value={budget}
-          onChange={(e) => setBudget(e.target.value)}
-        />
-        <input
-          id="food"
-          type="number"
-          value={food}
-          onChange={(e) => setFood(e.target.value)}
-        />
-        <input
-          id="travel"
-          type="number"
-          value={travel}
-          onChange={(e) => setTravel(e.target.value)}
-        />
-        <input
-          id="entertainment"
-          type="number"
-          value={entertainment}
-          onChange={(e) => setEntertainment(e.target.value)}
-        />
-        <button type="submit">Start Tracker</button>
+        <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+        <input id="budget" type="number" value={budget} onChange={(e) => setBudget(e.target.value)} />
+        <input id="food" type="number" value={food} onChange={(e) => setFood(e.target.value)} />
+        <input id="travel" type="number" value={travel} onChange={(e) => setTravel(e.target.value)} />
+        <input id="entertainment" type="number" value={entertainment} onChange={(e) => setEntertainment(e.target.value)} />
+
+        <button id="new-update" type="submit">New/Update Tracker</button>
+        <button id="clear" type="button" onClick={handleClear}>Start new tracker</button>
       </form>
     </div>
   );
