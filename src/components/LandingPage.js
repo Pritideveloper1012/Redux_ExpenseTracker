@@ -16,7 +16,7 @@ const LandingPage = () => {
   const [budget, setBudget] = useState("");
   const [food, setFood] = useState("");
   const [travel, setTravel] = useState("");
-  const [entertainment, setEntertainment] = useState(""); // MUST be entertainment
+  const [entertainment, setEntertainment] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,12 +27,11 @@ const LandingPage = () => {
     }
 
     const totalBudget = Number(budget);
-    const totalCategories =
-      Number(food) + Number(travel) + Number(entertainment);
+    const totalCategories = Number(food) + Number(travel) + Number(entertainment);
 
     if (totalCategories > totalBudget) {
       alert("Total Categorical budget should not exceed monthly budget");
-      return; // Do not navigate
+      return; // stop navigation
     }
 
     const other = totalBudget - totalCategories;
@@ -63,11 +62,36 @@ const LandingPage = () => {
   return (
     <div>
       <form name="landing-page-form" onSubmit={handleSubmit}>
-        <input id="name" value={name} onChange={(e) => setName(e.target.value)} />
-        <input id="budget" value={budget} onChange={(e) => setBudget(e.target.value)} />
-        <input id="food" value={food} onChange={(e) => setFood(e.target.value)} />
-        <input id="travel" value={travel} onChange={(e) => setTravel(e.target.value)} />
-        <input id="entertainment" value={entertainment} onChange={(e) => setEntertainment(e.target.value)} />
+        <input
+          id="name"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          id="budget"
+          type="number"
+          value={budget}
+          onChange={(e) => setBudget(e.target.value)}
+        />
+        <input
+          id="food"
+          type="number"
+          value={food}
+          onChange={(e) => setFood(e.target.value)}
+        />
+        <input
+          id="travel"
+          type="number"
+          value={travel}
+          onChange={(e) => setTravel(e.target.value)}
+        />
+        <input
+          id="entertainment"
+          type="number"
+          value={entertainment}
+          onChange={(e) => setEntertainment(e.target.value)}
+        />
 
         <button id="new-update" type="submit">New/Update Tracker</button>
         <button id="clear" type="button" onClick={handleClear}>Start new tracker</button>

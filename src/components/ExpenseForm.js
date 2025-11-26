@@ -22,7 +22,9 @@ const ExpenseForm = () => {
     const numAmount = Number(amount);
 
     if (numAmount > (categoricalBudget[category] || 0)) {
-      const proceed = window.confirm("Expense exceeds budget for this category. OK to add anyway?");
+      const proceed = window.confirm(
+        "Expense exceeds budget for this category. OK to add anyway?"
+      );
       if (!proceed) return;
     }
 
@@ -48,7 +50,11 @@ const ExpenseForm = () => {
         />
 
         <label htmlFor="category-select">Category</label>
-        <select id="category-select" value={category} onChange={(e) => setCategory(e.target.value)}>
+        <select
+          id="category-select"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
           <option value="food">Food</option>
           <option value="travel">Travel</option>
           <option value="entertainment">Entertainment</option>
