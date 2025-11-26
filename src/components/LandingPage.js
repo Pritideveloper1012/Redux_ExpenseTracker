@@ -4,7 +4,6 @@ import {
   updateUserName,
   updateMonthlyBudget,
   updateCategoricalBudget,
-  resetAllBudget,
 } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
@@ -13,78 +12,78 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
-  const [budget, setBudget] = useState(0);
-  const [foodBudget, setFoodBudget] = useState(0);
-  const [travelBudget, setTravelBudget] = useState(0);
-  const [entertainmentBudget, setEntertainmentBudget] = useState(0);
+  const [budget, setBudget] = useState("");
+  const [food, setFood] = useState("");
+  const [travel, setTravel] = useState("");
+  const [entertainment, setEntertainment] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validation: All fields must be filled
     if (!name || !budget) {
       alert("All fields are required");
       return;
     }
 
-    const totalCategory = foodBudget + travelBudget + entertainmentBudget;
-    if (totalCategory > budget) {
+    const totalBudget = Number(budget);
+    const totalCategories =
+      Number(food || 0) + Number(travel || 0) + Number(entertainment || 0);
+
+    if (totalCategories > totalBudget) {
       alert("Total Categorical budget should not exceed monthly budget");
       return;
     }
 
-    // If totalCategory < budget, assign remaining to "Other"
-    const otherBudget = budget - totalCategory;
+    const other = totalBudget - totalCategories;
 
-    // Dispatch user info
+    // Dispatch data
     dispatch(updateUserName(name));
-    dispatch(updateMonthlyBudget(budget));
+    dispatch(updateMonthlyBudget(totalBudget));
     dispatch(
       updateCategoricalBudget({
-        food: foodBudget,
-        travel: travelBudget,
-        entertainment: entertainmentBudget,
-        other: otherBudget,
+        food: Number(food),
+        travel: Number(travel),
+        entertainment: Number(entertainment),
+        other,
       })
     );
 
-    navigate("/tracker"); // ✅ Navigate after Redux update
+    navigate("/tracker");
   };
 
   return (
-    <div className="landing-page">
+    <div>
       <h1>Welcome to Expense Tracker</h1>
       <form name="landing-page-form" onSubmit={handleSubmit}>
         <input
           id="name"
           type="text"
-          placeholder="Enter Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
         <input
           id="budget"
           type="number"
-          value={budget || ""}
-          onChange={(e) => setBudget(Number(e.target.value))}
+          value={budget}
+          onChange={(e) => setBudget(e.target.value)}
         />
         <input
           id="food"
           type="number"
-          value={foodBudget || ""}
-          onChange={(e) => setFoodBudget(Number(e.target.value))}
+          value={food}
+          onChange={(e) => setFood(e.target.value)}
         />
         <input
           id="travel"
           type="number"
-          value={travelBudget || ""}
-          onChange={(e) => setTravelBudget(Number(e.target.value))}
+          value={travel}
+          onChange={(e) => setTravel(e.target.value)}
         />
         <input
           id="entertainment"
           type="number"
-          value={entertainmentBudget || ""}
-          onChange={(e) => setEntertainmentBudget(Number(e.target.value))}
+          value={entertainment}
+          onChange={(e) => setEntertainment(e.target.value)}
         />
         <button type="submit">Start Tracker</button>
       </form>

@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addTransactionEntry,
-} from "../redux/transactionSlice";
-import {
-  updateTotalExpense,
-  updateCategoricalExpense,
-} from "../redux/expenseSlice";
+import { addTransactionEntry } from "../redux/transactionSlice";
+import { updateTotalExpense, updateCategoricalExpense } from "../redux/expenseSlice";
 
 const ExpenseForm = () => {
   const dispatch = useDispatch();
@@ -14,7 +9,7 @@ const ExpenseForm = () => {
 
   const [expenseName, setExpenseName] = useState("");
   const [category, setCategory] = useState("food");
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,21 +19,24 @@ const ExpenseForm = () => {
       return;
     }
 
-    if (amount > categoricalBudget[category]) {
+    const numAmount = Number(amount);
+
+    if (numAmount > (categoricalBudget[category] || 0)) {
       const proceed = window.confirm(
         "Expense exceeds budget for this category. OK to add anyway?"
       );
       if (!proceed) return;
     }
 
-    dispatch(addTransactionEntry({ name: expenseName, category, amount }));
-    dispatch(updateTotalExpense(amount));
-    dispatch(updateCategoricalExpense({ category, amount }));
+    // Dispatch transaction
+    dispatch(addTransactionEntry({ name: expenseName, category, amount: numAmount }));
+    dispatch(updateTotalExpense(numAmount));
+    dispatch(updateCategoricalExpense({ category, amount: numAmount }));
 
     // Reset form
     setExpenseName("");
     setCategory("food");
-    setAmount(0);
+    setAmount("");
   };
 
   return (
@@ -69,8 +67,8 @@ const ExpenseForm = () => {
         <input
           id="expense-amount"
           type="number"
-          value={amount || ""}
-          onChange={(e) => setAmount(Number(e.target.value))}
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
         />
 
         <button type="submit">Add Expense</button>
