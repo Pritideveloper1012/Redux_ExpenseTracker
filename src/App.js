@@ -7,12 +7,10 @@ import TransactionsPage from "./components/TransactionsPage";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/transactions" element={<TransactionsPage />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/tracker" element={<TransactionsPage />} />
+    </Routes>
   );
 }
 
