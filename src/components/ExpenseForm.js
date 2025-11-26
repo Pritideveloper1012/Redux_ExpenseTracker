@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { addTransactionEntry } from "../redux/transactionSlice";
 import { updateTotalExpense, updateCategoricalExpense } from "../redux/expenseSlice";
 
@@ -22,18 +22,14 @@ const ExpenseForm = () => {
     const numAmount = Number(amount);
 
     if (numAmount > (categoricalBudget[category] || 0)) {
-      const proceed = window.confirm(
-        "Expense exceeds budget for this category. OK to add anyway?"
-      );
+      const proceed = window.confirm("Expense exceeds budget for this category. OK to add anyway?");
       if (!proceed) return;
     }
 
-    // Dispatch transaction
     dispatch(addTransactionEntry({ name: expenseName, category, amount: numAmount }));
     dispatch(updateTotalExpense(numAmount));
     dispatch(updateCategoricalExpense({ category, amount: numAmount }));
 
-    // Reset form
     setExpenseName("");
     setCategory("food");
     setAmount("");
@@ -52,11 +48,7 @@ const ExpenseForm = () => {
         />
 
         <label htmlFor="category-select">Category</label>
-        <select
-          id="category-select"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
+        <select id="category-select" value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="food">Food</option>
           <option value="travel">Travel</option>
           <option value="entertainment">Entertainment</option>

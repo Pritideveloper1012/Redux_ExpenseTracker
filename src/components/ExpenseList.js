@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteTransaction } from "../redux/transactionsSlice";
+import { deleteTransaction } from "../redux/transactionSlice";
 
 const ExpenseList = () => {
   const dispatch = useDispatch();
