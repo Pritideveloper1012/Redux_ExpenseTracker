@@ -50,6 +50,11 @@ const LandingPage = () => {
       })
     );
     dispatch(resetAllExpense());
+    setName("");
+    setBudget("");
+    setFood("");
+    setTravel("");
+    setEntertainment("")
 
     navigate("/tracker");
   };
