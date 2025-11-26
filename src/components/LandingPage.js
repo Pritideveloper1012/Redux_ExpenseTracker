@@ -51,7 +51,29 @@ const LandingPage = () => {
     );
     dispatch(resetAllExpense());
 
-    navigate("/tracker");
+    navigate("/transactions"); // make sure your route is /transactions
+  };
+
+  const handleReset = () => {
+    // Reset Redux state
+    dispatch(resetAllExpense());
+    dispatch(updateUserName(""));
+    dispatch(updateMonthlyBudget(""));
+    dispatch(
+      updateCategoricalBudget({
+        food: "",
+        travel: "",
+        entertainment: "",
+        others: "",
+      })
+    );
+
+    // Reset form state
+    setName("");
+    setBudget("");
+    setFood("");
+    setTravel("");
+    setEntertainment("");
   };
 
   return (
@@ -103,37 +125,9 @@ const LandingPage = () => {
         </button>
       </form>
 
-      <button
-  id="clear"
-  onClick={() => {
-    // Reset Redux state
-    dispatch(resetAllExpense());
-    dispatch(
-      updateUserName("")
-    );
-    dispatch(
-      updateMonthlyBudget("")
-    );
-    dispatch(
-      updateCategoricalBudget({
-        food: "",
-        travel: "",
-        entertainment: "",
-        others: "",
-      })
-    );
-
-    // Reset form inputs
-    setName("");
-    setBudget("");
-    setFood("");
-    setTravel("");
-    setEntertainment("");
-  }}
->
-  Start new tracker
-</button>
-
+      <button id="clear" onClick={handleReset}>
+        Start new tracker
+      </button>
     </div>
   );
 };
