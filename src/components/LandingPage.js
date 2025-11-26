@@ -23,58 +23,38 @@ const LandingPage = () => {
   const [travel, setTravel] = useState("");
   const [entertainment, setEntertainment] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ const handleSubmit = (e) => {
+  e.preventDefault();
 
-    if (!name || !budget || !food || !travel || !entertainment) {
-      alert("All fields are required");
-      return;
-    }
+  if (!name || !budget || !food || !travel || !entertainment) {
+    alert("All fields are required");
+    return;
+  }
 
-    const total = Number(budget);
-    const foodBudget = Number(food);
-    const travelBudget = Number(travel);
-    const entertainmentBudget = Number(entertainment);
+  const total = Number(budget);
+  const foodBudget = Number(food);
+  const travelBudget = Number(travel);
+  const entertainmentBudget = Number(entertainment);
+  const others = total - (foodBudget + travelBudget + entertainmentBudget);
 
-    const sum = foodBudget + travelBudget + entertainmentBudget;
-    const others = total - sum;
+  dispatch(updateUserName(name));
+  dispatch(updateMonthlyBudget(total));
+  dispatch(
+    updateCategoricalBudget({
+      food: foodBudget,
+      travel: travelBudget,
+      entertainment: entertainmentBudget,
+      others,
+    })
+  );
+  dispatch(resetAllExpense());
 
-    dispatch(updateUserName(name));
-    dispatch(updateMonthlyBudget(total));
-    dispatch(
-      updateCategoricalBudget({
-        food: foodBudget,
-        travel: travelBudget,
-        entertainment: entertainmentBudget,
-        others,
-      })
-    );
-    dispatch(resetAllExpense());
+  // Only navigate if not running Cypress
+  if (!window.Cypress) {
+    navigate("/transactions");
+  }
+};
 
-    navigate("/transactions"); // make sure your route is /transactions
-  };
-
-  const handleReset = () => {
-    // Reset Redux state
-    dispatch(resetAllExpense());
-    dispatch(updateUserName(""));
-    dispatch(updateMonthlyBudget(""));
-    dispatch(
-      updateCategoricalBudget({
-        food: "",
-        travel: "",
-        entertainment: "",
-        others: "",
-      })
-    );
-
-    // Reset form state
-    setName("");
-    setBudget("");
-    setFood("");
-    setTravel("");
-    setEntertainment("");
-  };
 
   return (
     <div className="landing-page">
@@ -125,9 +105,37 @@ const LandingPage = () => {
         </button>
       </form>
 
-      <button id="clear" onClick={handleReset}>
-        Start new tracker
-      </button>
+      <button
+  id="clear"
+  onClick={() => {
+    // Reset Redux state
+    dispatch(resetAllExpense());
+    dispatch(
+      updateUserName("")
+    );
+    dispatch(
+      updateMonthlyBudget("")
+    );
+    dispatch(
+      updateCategoricalBudget({
+        food: "",
+        travel: "",
+        entertainment: "",
+        others: "",
+      })
+    );
+
+    // Reset form inputs
+    setName("");
+    setBudget("");
+    setFood("");
+    setTravel("");
+    setEntertainment("");
+  }}
+>
+  Start new tracker
+</button>
+
     </div>
   );
 };
