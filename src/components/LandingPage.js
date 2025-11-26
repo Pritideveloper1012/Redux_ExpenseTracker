@@ -18,7 +18,7 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
-  const [totalBudget, setTotalBudget] = useState("");
+  const [budget, setBudget] = useState("");
   const [food, setFood] = useState("");
   const [travel, setTravel] = useState("");
   const [entertainment, setEntertainment] = useState("");
@@ -26,18 +26,18 @@ const LandingPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!name || !totalBudget || !food || !travel || !entertainment) {
+    if (!name || !budget || !food || !travel || !entertainment) {
       alert("All fields are required");
       return;
     }
 
-    const total = Number(totalBudget);
+    const total = Number(budget);
     const foodBudget = Number(food);
     const travelBudget = Number(travel);
     const entertainmentBudget = Number(entertainment);
 
-    const sumCategories = foodBudget + travelBudget + entertainmentBudget;
-    const others = total - sumCategories;
+    const sum = foodBudget + travelBudget + entertainmentBudget;
+    const others = total - sum;
 
     dispatch(updateUserName(name));
     dispatch(updateMonthlyBudget(total));
@@ -67,15 +67,15 @@ const LandingPage = () => {
         />
 
         <input
-          id="total-budget"
+          id="budget"
           placeholder="Total Budget"
           type="number"
-          value={totalBudget}
-          onChange={(e) => setTotalBudget(e.target.value)}
+          value={budget}
+          onChange={(e) => setBudget(e.target.value)}
         />
 
         <input
-          id="food-budget"
+          id="food"
           placeholder="Food"
           type="number"
           value={food}
@@ -83,7 +83,7 @@ const LandingPage = () => {
         />
 
         <input
-          id="travel-budget"
+          id="travel"
           placeholder="Travel"
           type="number"
           value={travel}
@@ -91,7 +91,7 @@ const LandingPage = () => {
         />
 
         <input
-          id="entertainment-budget"
+          id="entertainment"
           placeholder="Entertainment"
           type="number"
           value={entertainment}
