@@ -1,69 +1,87 @@
-// src/components/ExpenseForm.js
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addExpense } from "../redux/expenseSlice";
+import {
+  updateTotalExpense,
+  updateCategoricalExpense,
+} from "../redux/expenseSlice";
+import { addTransactionEntry } from "../redux/transactionSlice";
 
-const ExpenseForm = () => {
+function ExpenseForm() {
   const dispatch = useDispatch();
 
-  const [expenseName, setExpenseName] = useState("");
-  const [expenseAmount, setExpenseAmount] = useState("");
-  const [expenseCategory, setExpenseCategory] = useState("");
+  const [expense, setExpense] = useState({
+    name: "",
+    amount: "",
+    category: "food",
+  });
+
+  const handleChange = (e) => {
+    setExpense({ ...expense, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!expenseName || !expenseAmount || !expenseCategory) {
-      return;
-    }
+    const amt = Number(expense.amount);
+
+    const transaction = {
+      id: Date.now(),
+      name: expense.name,
+      amount: amt,
+      category: expense.category,
+    };
+
+    dispatch(addTransactionEntry(transaction));
+
+    dispatch(updateTotalExpense({ amount: amt, operation: "add" }));
 
     dispatch(
-      addExpense({
-        name: expenseName,
-        amount: Number(expenseAmount),
-        category: expenseCategory,
+      updateCategoricalExpense({
+        category: expense.category,
+        amount: amt,
+        operation: "add",
       })
     );
 
-    setExpenseName("");
-    setExpenseAmount("");
-    setExpenseCategory("");
+    setExpense({ name: "", amount: "", category: "food" });
   };
 
   return (
-    <form className="expense-form1" onSubmit={handleSubmit}>
-      <input
-        id="expense-name"
-        placeholder="Expense Name"
-        value={expenseName}
-        onChange={(e) => setExpenseName(e.target.value)}
-      />
+    <div className="expense-form1">
+      <form onSubmit={handleSubmit}>
+        <input
+          id="expense-name"
+          name="name"
+          value={expense.name}
+          onChange={handleChange}
+        />
 
-      <input
-        id="expense-amount"
-        placeholder="Amount"
-        type="number"
-        value={expenseAmount}
-        onChange={(e) => setExpenseAmount(e.target.value)}
-      />
+        <input
+          id="expense-amount"
+          type="number"
+          name="amount"
+          value={expense.amount}
+          onChange={handleChange}
+        />
 
-      <select
-        id="expense-category"
-        value={expenseCategory}
-        onChange={(e) => setExpenseCategory(e.target.value)}
-      >
-        <option value="">Select Category</option>
-        <option value="food">Food</option>
-        <option value="travel">Travel</option>
-        <option value="entertainment">Entertainment</option>
-        <option value="others">Others</option>
-      </select>
+        <select
+          id="expense-category"
+          name="category"
+          value={expense.category}
+          onChange={handleChange}
+        >
+          <option value="food">food</option>
+          <option value="travel">travel</option>
+          <option value="entertainment">entertainment</option>
+          <option value="others">others</option>
+        </select>
 
-      <button id="expense-submit" type="submit">
-        Add Expense
-      </button>
-    </form>
+        <button id="add-expense" type="submit">
+          Add Expense
+        </button>
+      </form>
+    </div>
   );
-};
+}
 
 export default ExpenseForm;
