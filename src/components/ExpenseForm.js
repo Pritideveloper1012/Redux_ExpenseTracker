@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTransaction } from "../redux/transactionsSlice";
+import store from "../redux/store";
+
+if (window.Cypress && !window.store) {
+  window.store = store;
+}
 
 const ExpenseForm = () => {
   const dispatch = useDispatch();
