@@ -1,20 +1,25 @@
+// src/components/TransactionsPage.js
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateTotalExpense, updateCategoricalExpense } from "../redux/expenseSlice"; // update budget/expense slice
+import {
+  updateTotalExpense,
+  updateCategoricalExpense,
+  resetAllExpense,
+} from "../redux/expenseSlice";
 import {
   addTransactionEntry,
   removeTransactionEntry,
   removeAllTransactions,
-} from "../redux/transactionSlice"; // correct transaction slice actions
+} from "../redux/transactionSlice";
 
 const TransactionsPage = () => {
   const dispatch = useDispatch();
 
-  // Selectors
-  const user = useSelector((state) => state.user) || { name: "" };
-  const budget = useSelector((state) => state.expenses) || {
-    totalBudget: 0,
-    categories: { food: 0, travel: 0, entertainment: 0, other: 0 },
+  // Redux state
+  const user = useSelector((state) => state.user) || { userName: "User" };
+  const expenses = useSelector((state) => state.expenses) || {
+    totalExpense: 0,
+    categoricalExpense: { food: 0, travel: 0, entertainment: 0, others: 0 },
   };
   const transactions = useSelector((state) => state.transactions.transactions) || [];
 
@@ -24,31 +29,30 @@ const TransactionsPage = () => {
   const [expenseAmount, setExpenseAmount] = useState("");
   const [filter, setFilter] = useState("All");
 
-  // Calculate spent per category
-  const categorySpent = { food: 0, travel: 0, entertainment: 0, other: 0 };
+  // Calculate category-wise spent
+  const categorySpent = { food: 0, travel: 0, entertainment: 0, others: 0 };
   transactions.forEach((tx) => {
     categorySpent[tx.category] += tx.amount;
   });
 
-  // Add new expense
+  // Add expense
   const handleAddExpense = (e) => {
     e.preventDefault();
     if (!expenseName || !expenseAmount) {
       alert("All fields are required");
       return;
     }
-
     const amount = Number(expenseAmount);
+
     dispatch(
       addTransactionEntry({
         id: Date.now(),
         name: expenseName,
         category: expenseCategory,
-        amount: amount,
+        amount,
       })
     );
 
-    // Update budget spent
     dispatch(updateCategoricalExpense({ category: expenseCategory, amount }));
 
     setExpenseName("");
@@ -61,31 +65,11 @@ const TransactionsPage = () => {
     dispatch(updateCategoricalExpense({ category, amount: -amount }));
   };
 
-  // Start new tracker
+  // Reset tracker
   const handleNewTracker = () => {
     dispatch(removeAllTransactions());
+    dispatch(resetAllExpense());
     window.location.reload();
-  };
-
-  // Update budgets
-  const handleUpdateBudget = () => {
-    const food = Number(prompt("New Food budget", budget.categories.food));
-    const travel = Number(prompt("New Travel budget", budget.categories.travel));
-    const entertainment = Number(prompt("New Entertainment budget", budget.categories.entertainment));
-    const totalBudget = Number(prompt("New Total Budget", budget.totalBudget));
-
-    const sum = food + travel + entertainment;
-    if (sum > totalBudget) {
-      alert("Category budgets exceed total budget");
-      return;
-    }
-
-    dispatch(
-      updateTotalExpense({
-        totalBudget,
-        categories: { food, travel, entertainment, other: totalBudget - sum },
-      })
-    );
   };
 
   // Filtered transactions
@@ -95,12 +79,7 @@ const TransactionsPage = () => {
   return (
     <div className="transactions-page">
       <header>
-        <h1>{user.name || "User"} Expense Tracker</h1>
-
-        <button id="new-update" onClick={handleUpdateBudget}>
-          Update Tracker
-        </button>
-
+        <h1>{user.userName || "User"} Expense Tracker</h1>
         <button id="clear" onClick={handleNewTracker}>
           Start New Tracker
         </button>
@@ -113,21 +92,18 @@ const TransactionsPage = () => {
           <thead>
             <tr>
               <th>Category</th>
-              <th>Allocated</th>
               <th>Spent</th>
               <th>Balance</th>
             </tr>
           </thead>
           <tbody>
-            {Object.keys(budget.categories || {}).map((cat) => {
-              const alloc = budget.categories[cat] || 0;
-              const spent = categorySpent[cat] || 0;
+            {Object.keys(expenses.categoricalExpense).map((cat) => {
+              const spent = expenses.categoricalExpense[cat] || 0;
               return (
                 <tr key={cat}>
-                  <td>{cat.toUpperCase()}</td>
-                  <td>{alloc}</td>
+                  <td>{cat.charAt(0).toUpperCase() + cat.slice(1)}</td>
                   <td>{spent}</td>
-                  <td>{alloc - spent}</td>
+                  <td>{Math.max(0, (expenses.totalExpense || 0) - spent)}</td>
                 </tr>
               );
             })}
@@ -138,7 +114,7 @@ const TransactionsPage = () => {
       {/* Add Expense */}
       <section className="new-expense">
         <h2>New Expense</h2>
-        <form onSubmit={handleAddExpense} id="expense-form1">
+        <form onSubmit={handleAddExpense} className="expense-form1" id="expense-form1">
           <input
             id="expense-name"
             type="text"
@@ -154,7 +130,7 @@ const TransactionsPage = () => {
             <option value="food">Food</option>
             <option value="travel">Travel</option>
             <option value="entertainment">Entertainment</option>
-            <option value="other">Other</option>
+            <option value="others">Others</option>
           </select>
           <input
             id="expense-amount"
@@ -169,9 +145,9 @@ const TransactionsPage = () => {
 
       {/* Filters */}
       <div className="filters">
-        {["All", "Food", "Travel", "Entertainment", "Other"].map((cat) => (
-          <button key={cat} onClick={() => setFilter(cat)}>
-            {cat}
+        {["All", "Food", "Travel", "Entertainment", "Others"].map((f) => (
+          <button key={f} onClick={() => setFilter(f)}>
+            {f}
           </button>
         ))}
       </div>

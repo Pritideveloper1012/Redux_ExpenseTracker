@@ -1,15 +1,15 @@
+// src/components/LandingPageForm.js
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { updateTotalExpense } from "../redux/expenseSlice";
-import { addUser } from "../redux/userSlice"; // agar userSlice me addUser action hai
+import { updateUserName, updateMonthlyBudget, updateCategoricalBudget } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
-const LandingPage = () => {
+const LandingPageForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [totalBudget, setTotalBudget] = useState("");
-
   const [foodBudget, setFoodBudget] = useState("");
   const [travelBudget, setTravelBudget] = useState("");
   const [entertainmentBudget, setEntertainmentBudget] = useState("");
@@ -17,44 +17,38 @@ const LandingPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!name || !totalBudget) {
-      alert("Please fill all required fields");
+    if (!name || !totalBudget || !foodBudget || !travelBudget || !entertainmentBudget) {
+      alert("All fields are required");
       return;
     }
 
-    const sumCategories =
-      Number(foodBudget || 0) +
-      Number(travelBudget || 0) +
-      Number(entertainmentBudget || 0);
+    const total = Number(totalBudget);
+    const food = Number(foodBudget);
+    const travel = Number(travelBudget);
+    const entertainment = Number(entertainmentBudget);
 
-    if (sumCategories > Number(totalBudget)) {
-      alert("Category budgets cannot exceed total budget");
+    if (food + travel + entertainment > total) {
+      alert("Category budgets exceed total budget");
       return;
     }
 
-    dispatch(
-      addUser({ name }) // user slice update
-    );
+    // Redux dispatch
+    dispatch(updateUserName(name));
+    dispatch(updateMonthlyBudget(total));
+    dispatch(updateCategoricalBudget({
+      food,
+      travel,
+      entertainment
+    }));
 
-    dispatch(
-      updateTotalExpense({
-        totalBudget: Number(totalBudget),
-        categories: {
-          food: Number(foodBudget || 0),
-          travel: Number(travelBudget || 0),
-          entertainment: Number(entertainmentBudget || 0),
-          other: Number(totalBudget) - sumCategories,
-        },
-      })
-    );
-
+    // Navigate to Transactions Page
     navigate("/transactions");
   };
 
   return (
     <div className="landing-page">
       <h1>Welcome to Expense Tracker</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} id="landing-form">
         <input
           id="name"
           type="text"
@@ -90,10 +84,10 @@ const LandingPage = () => {
           value={entertainmentBudget}
           onChange={(e) => setEntertainmentBudget(e.target.value)}
         />
-        <button type="submit">Start Tracking</button>
+        <button type="submit" id="start-btn">Start Tracker</button>
       </form>
     </div>
   );
 };
 
-export default LandingPage;
+export default LandingPageForm;
