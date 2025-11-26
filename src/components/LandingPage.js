@@ -4,7 +4,7 @@ import {
   updateUserName,
   updateMonthlyBudget,
   updateCategoricalBudget,
-  resetTransactions
+  removeAllTransactions,
 } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
@@ -42,7 +42,7 @@ const LandingPage = () => {
   };
 
   const handleClear = () => {
-    dispatch(resetTransactions());
+    dispatch(removeAllTransactions());
     setName("");
     setBudget("");
     setFood("");
