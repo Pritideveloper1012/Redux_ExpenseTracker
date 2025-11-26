@@ -2,15 +2,13 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-// Redux actions
 import { updateUserName, updateMonthlyBudget, updateCategoricalBudget } from "../redux/userSlice";
 import { resetAllExpense } from "../redux/expenseSlice";
-// import store from "../redux/store";
+import store from "../redux/store";
 
-// if (window.Cypress && !window.store) {
-//   window.store = store;
-// }
-
+if (window.Cypress && !window.store) {
+  window.store = store;
+}
 
 const LandingPage = () => {
   const dispatch = useDispatch();
@@ -41,6 +39,7 @@ const LandingPage = () => {
     }
 
     const sumCategories = foodBudget + travelBudget + entertainmentBudget;
+
     if (sumCategories > total) {
       alert("Total Categorical budget should not exceed monthly budget");
       return;
@@ -65,6 +64,7 @@ const LandingPage = () => {
   return (
     <div className="landing-page">
       <h1>Expense Tracker</h1>
+
       <form name="landing-page-form" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Name:</label>
@@ -91,8 +91,14 @@ const LandingPage = () => {
           <input id="entertainment" type="number" value={entertainment} onChange={(e) => setEntertainment(e.target.value)} />
         </div>
 
-        <button type="submit">Submit</button>
+        <button id="new-update" type="submit">
+          New/Update tracker
+        </button>
       </form>
+
+      <button id="clear" onClick={() => window.location.reload()}>
+        Start new tracker
+      </button>
     </div>
   );
 };
