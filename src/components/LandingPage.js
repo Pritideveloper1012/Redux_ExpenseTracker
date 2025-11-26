@@ -1,106 +1,97 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { updateTotalExpense } from "../redux/expenseSlice";
+import { addUser } from "../redux/userSlice"; // agar userSlice me addUser action hai
 import { useNavigate } from "react-router-dom";
-
-import { updateUserName, updateMonthlyBudget, updateCategoricalBudget } from "../redux/userSlice";
-import { resetAllExpense } from "../redux/expenseSlice";
-import store from "../redux/store";
-
-if (window.Cypress && !window.store) {
-  window.store = store;
-}
 
 const LandingPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const [name, setName] = useState("");
   const [totalBudget, setTotalBudget] = useState("");
-  const [food, setFood] = useState("");
-  const [travel, setTravel] = useState("");
-  const [entertainment, setEntertainment] = useState("");
+
+  const [foodBudget, setFoodBudget] = useState("");
+  const [travelBudget, setTravelBudget] = useState("");
+  const [entertainmentBudget, setEntertainmentBudget] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!name || !totalBudget || !food || !travel || !entertainment) {
-      alert("All fields are required");
+    if (!name || !totalBudget) {
+      alert("Please fill all required fields");
       return;
     }
 
-    const total = Number(totalBudget);
-    const foodBudget = Number(food);
-    const travelBudget = Number(travel);
-    const entertainmentBudget = Number(entertainment);
+    const sumCategories =
+      Number(foodBudget || 0) +
+      Number(travelBudget || 0) +
+      Number(entertainmentBudget || 0);
 
-    if (total <= 0) {
-      alert("Total budget must be greater than 0");
+    if (sumCategories > Number(totalBudget)) {
+      alert("Category budgets cannot exceed total budget");
       return;
     }
 
-    const sumCategories = foodBudget + travelBudget + entertainmentBudget;
-
-    if (sumCategories > total) {
-      alert("Total Categorical budget should not exceed monthly budget");
-      return;
-    }
-
-    const others = total - sumCategories;
-
-    dispatch(updateUserName(name));
-    dispatch(updateMonthlyBudget(total));
     dispatch(
-      updateCategoricalBudget({
-        food: foodBudget,
-        travel: travelBudget,
-        entertainment: entertainmentBudget,
-        others: others, // ✅ match expenseSlice key
+      addUser({ name }) // user slice update
+    );
+
+    dispatch(
+      updateTotalExpense({
+        totalBudget: Number(totalBudget),
+        categories: {
+          food: Number(foodBudget || 0),
+          travel: Number(travelBudget || 0),
+          entertainment: Number(entertainmentBudget || 0),
+          other: Number(totalBudget) - sumCategories,
+        },
       })
     );
 
-    dispatch(resetAllExpense());
-
-    navigate("/tracker");
+    navigate("/transactions");
   };
 
   return (
     <div className="landing-page">
-      <h1>Expense Tracker</h1>
-
-      <form name="landing-page-form" onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Name:</label>
-          <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
-        </div>
-
-        <div>
-          <label htmlFor="budget">Total Budget:</label>
-          <input id="budget" type="number" value={totalBudget} onChange={(e) => setTotalBudget(e.target.value)} />
-        </div>
-
-        <div>
-          <label htmlFor="food">Food:</label>
-          <input id="food" type="number" value={food} onChange={(e) => setFood(e.target.value)} />
-        </div>
-
-        <div>
-          <label htmlFor="travel">Travel:</label>
-          <input id="travel" type="number" value={travel} onChange={(e) => setTravel(e.target.value)} />
-        </div>
-
-        <div>
-          <label htmlFor="entertainment">Entertainment:</label>
-          <input id="entertainment" type="number" value={entertainment} onChange={(e) => setEntertainment(e.target.value)} />
-        </div>
-
-        <button id="new-update" type="submit">
-          New/Update tracker
-        </button>
+      <h1>Welcome to Expense Tracker</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          id="name"
+          type="text"
+          placeholder="Enter your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          id="total-budget"
+          type="number"
+          placeholder="Total Budget"
+          value={totalBudget}
+          onChange={(e) => setTotalBudget(e.target.value)}
+        />
+        <input
+          id="food-budget"
+          type="number"
+          placeholder="Food Budget"
+          value={foodBudget}
+          onChange={(e) => setFoodBudget(e.target.value)}
+        />
+        <input
+          id="travel-budget"
+          type="number"
+          placeholder="Travel Budget"
+          value={travelBudget}
+          onChange={(e) => setTravelBudget(e.target.value)}
+        />
+        <input
+          id="entertainment-budget"
+          type="number"
+          placeholder="Entertainment Budget"
+          value={entertainmentBudget}
+          onChange={(e) => setEntertainmentBudget(e.target.value)}
+        />
+        <button type="submit">Start Tracking</button>
       </form>
-
-      <button id="clear" onClick={() => window.location.reload()}>
-        Start new tracker
-      </button>
     </div>
   );
 };
