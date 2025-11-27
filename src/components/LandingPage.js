@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { removeAllTransactions } from "../redux/transactionSlice";
-import { setUserDetails } from "../redux/userSlice";
-import { setCategoricalBudget } from "../redux/expenseSlice";
+import { updateUserName, updateMonthlyBudget, updateCategoricalBudget } from "../redux/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
@@ -16,42 +15,67 @@ const LandingPage = () => {
   const [entertainment, setEntertainment] = useState("");
 
   const handleStart = () => {
+    // Clear previous transactions
     dispatch(removeAllTransactions());
 
-    dispatch(
-      setUserDetails({
-        name,
-        totalBudget: Number(budget),
-      })
-    );
+    // Update user details in Redux
+    dispatch(updateUserName(name));
+    dispatch(updateMonthlyBudget(Number(budget)));
 
+    // Update categorical budget
     dispatch(
-      setCategoricalBudget({
+      updateCategoricalBudget({
         food: Number(food),
         travel: Number(travel),
         entertainment: Number(entertainment),
-        others: 0,
       })
     );
 
+    // Reset input fields
     setName("");
     setBudget("");
     setFood("");
     setTravel("");
     setEntertainment("");
 
-    navigate("/transactions"); // IMPORTANT
+    // Navigate to transactions page
+    navigate("/transactions");
   };
 
   return (
     <div>
       <h2>Welcome to Expense Tracker</h2>
 
-      <input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter Name" />
-      <input id="budget" value={budget} onChange={(e) => setBudget(e.target.value)} placeholder="Enter Total Budget" />
-      <input id="food" value={food} onChange={(e) => setFood(e.target.value)} placeholder="Food Budget" />
-      <input id="travel" value={travel} onChange={(e) => setTravel(e.target.value)} placeholder="Travel Budget" />
-      <input id="entertainment" value={entertainment} onChange={(e) => setEntertainment(e.target.value)} placeholder="Entertainment Budget" />
+      <input
+        id="name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Enter Name"
+      />
+      <input
+        id="budget"
+        value={budget}
+        onChange={(e) => setBudget(e.target.value)}
+        placeholder="Enter Total Budget"
+      />
+      <input
+        id="food"
+        value={food}
+        onChange={(e) => setFood(e.target.value)}
+        placeholder="Food Budget"
+      />
+      <input
+        id="travel"
+        value={travel}
+        onChange={(e) => setTravel(e.target.value)}
+        placeholder="Travel Budget"
+      />
+      <input
+        id="entertainment"
+        value={entertainment}
+        onChange={(e) => setEntertainment(e.target.value)}
+        placeholder="Entertainment Budget"
+      />
 
       <button id="new-update" onClick={handleStart}>
         Start new tracker

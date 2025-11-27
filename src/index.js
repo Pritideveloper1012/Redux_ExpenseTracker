@@ -4,7 +4,8 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
-import store from "./redux/store"; // ✅ make sure this is imported
+import store from "./redux/Store"; // <-- Ensure exact case matches file
+
 import reportWebVitals from "./reportWebVitals";
 
 // For Cypress testing

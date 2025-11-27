@@ -12,15 +12,19 @@ const ExpenseForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Do not add empty values
+    if (!name || !category || !amount) return;
+
     dispatch(
       addTransactionEntry({
-        id: Date.now(),   // Cypress requires ID
+        id: Date.now(),   // Cypress requires unique ID
         name,
         category,
         amount: Number(amount),
       })
     );
 
+    // Reset form fields after submit
     setName("");
     setCategory("");
     setAmount("");
