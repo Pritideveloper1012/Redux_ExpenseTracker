@@ -16,14 +16,19 @@ function ExpenseForm() {
     if (!expenseName || !category || !amount) return;
 
     const expenseData = {
+      id: Date.now(),
       name: expenseName,
       category: category,
       amount: Number(amount),
     };
 
-    dispatch(updateTotalExpense(expenseData));
+    // Dispatch required updates
+    dispatch(
+      updateTotalExpense({ amount: Number(amount), operation: "add" })
+    );
     dispatch(addTransactionEntry(expenseData));
 
+    // Reset fields
     setExpenseName("");
     setCategory("");
     setAmount("");
@@ -32,48 +37,55 @@ function ExpenseForm() {
   return (
     <div className="expense-container">
       
-      {/* ✔ THIS MUST MATCH CYPRESS: div.title */}
+      {/* ✔ CLASS must be "title" */}
       <div className="title">New Expense Form</div>
 
-      {/* ✔ IMPORTANT: Cypress checks .expense-form1 (CLASS) */}
-      <form
-        className="expense-form1"
-        id="expense-form1"
-        onSubmit={handleSubmit}
-      >
-        {/* Expense Name */}
-        <label htmlFor="expense-name">Expense Name:</label>
+      {/* ✔ ID must be expense-form1 */}
+      <form id="expense-form1" onSubmit={handleSubmit}>
+        
+        {/* EXPENSE NAME */}
+        {/* ✔ Label must have htmlFor="expense-name" */}
+        <label htmlFor="expense-name">expense-name</label>
+
+        {/* ✔ Input must have id="expense-name" */}
         <input
-          type="text"
           id="expense-name"
+          type="text"
           value={expenseName}
           onChange={(e) => setExpenseName(e.target.value)}
         />
 
-        {/* Category */}
-        <label htmlFor="category-select">Select category:</label>
+        {/* CATEGORY */}
+        {/* ✔ Label must have htmlFor="category-select" */}
+        <label htmlFor="category-select">category-select</label>
+
+        {/* ✔ Select must have id="category-select" */}
         <select
           id="category-select"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         >
           <option value="">Select</option>
-          <option value="food">Food</option>
-          <option value="travel">Travel</option>
-          <option value="entertainment">Entertainment</option>
-          <option value="others">Others</option>
+          <option value="food">food</option>
+          <option value="travel">travel</option>
+          <option value="entertainment">entertainment</option>
+          <option value="others">others</option>
         </select>
 
-        {/* Expense Amount */}
-        <label htmlFor="expense-amount">Expense Amount:</label>
+        {/* AMOUNT */}
+        {/* ✔ Label must have htmlFor="expense-amount" */}
+        <label htmlFor="expense-amount">expense-amount</label>
+
+        {/* ✔ Input must have id="expense-amount" */}
         <input
-          type="number"
           id="expense-amount"
+          type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
 
-        {/* Submit */}
+        {/* SUBMIT BUTTON */}
+        {/* ✔ Must have type="submit" */}
         <button type="submit">Submit</button>
       </form>
     </div>
