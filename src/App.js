@@ -1,14 +1,20 @@
 import "./App.css";
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import LandingPage from "./components/LandingPage";
-import ExpenseForm from "./components/ExpenseForm";
+import TransactionsPage from "./components/TransactionsPage";
 
 const App = () => {
   return (
     <Routes>
+      {/* Default landing page */}
       <Route path="/" element={<LandingPage />} />
-      <Route path="/transactions" element={<ExpenseForm />} />
+
+      {/* Transactions Page */}
+      <Route path="/tracker" element={<TransactionsPage />} />
+
+      {/* Redirect any unknown route to landing page */}
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 };
