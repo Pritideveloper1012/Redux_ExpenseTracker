@@ -54,14 +54,17 @@ const LandingPage = () => {
   };
 
   const handleClear = () => {
-    dispatch(resetAllBudget());
-    dispatch(removeAllTransactions());
-    setName("");
-    setBudget("");
-    setFood("");
-    setTravel("");
-    setEntertainment("");
-  };
+    dispatch(resetAllBudget());
+    dispatch(removeAllTransactions());
+    setName("");
+    setBudget("");
+    setFood("");
+    setTravel("");
+    setEntertainment("");
+    
+    // CRITICAL FIX: Navigate back to the page where the form is located
+    navigate("/"); 
+  };
 
   return (
     <div>
