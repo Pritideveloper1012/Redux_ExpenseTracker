@@ -1,65 +1,83 @@
-// ExpenseForm.js
-
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { updateTotalExpense } from "../redux/expenseSlice";
 import { addTransactionEntry } from "../redux/transactionSlice";
 
-const ExpenseForm = () => {
-  const dispatch = useDispatch();
+function ExpenseForm() {
+  const dispatch = useDispatch();
 
-  const [expenseName, setExpenseName] = useState("");
-  const [category, setCategory] = useState("");
-  const [amount, setAmount] = useState("");
+  const [expenseName, setExpenseName] = useState("");
+  const [category, setCategory] = useState("");
+  const [amount, setAmount] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // ... (submission logic is correct)
-  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  return (
-    <div className="form-container">
-      {/* Must use the CLASS NAME 'title' for the test to find the element, despite ID requirement. */}
-      <div className="title">New Expense Form</div>
+    if (!expenseName || !category || !amount) return;
 
-      {/* Must use the CLASS NAME 'expense-form1' for the test to find the form. */}
-      <form className="expense-form1" onSubmit={handleSubmit}>
+    const expenseData = {
+      id: Date.now(),
+      name: expenseName,
+      category: category,
+      amount: Number(amount),
+    };
 
-        {/* Expense Name: Label text must be "Expense Name:" */}
-        <label htmlFor="expense-name" id="expense-name">Expense Name:</label>
-        <input
-          id="expense-name"
-          type="text"
-          value={expenseName}
-          onChange={(e) => setExpenseName(e.target.value)}
-        />
+    dispatch(
+      updateTotalExpense({ amount: Number(amount), operation: "add" })
+    );
+    dispatch(addTransactionEntry(expenseData));
 
-        {/* CRITICAL FIX: Adding a trailing space after the colon inside the label. */}
-        <label htmlFor="category-select" id="category-select">Select category: </label> 
-        <select
-          id="category-select"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option value="">Select Category</option>
-          <option value="food">Food</option>
-          <option value="travel">Travel</option>
-          <option value="entertainment">Entertainment</option>
-          <option value="others">Others</option>
-        </select>
+    setExpenseName("");
+    setCategory("");
+    setAmount("");
+  };
 
-        {/* Amount label: Must be "Expense Amount:" based on previous analysis of the test file. */}
-        <label htmlFor="expense-amount" id="expense-amount">Expense Amount:</label>
-        <input
-          id="expense-amount"
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-        />
+  return (
+    <div className="expense-container">
+      
+      {/* Cypress expects class .title */}
+      <div className="title">New Expense Form</div>
 
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-  );
-};
+      {/* Cypress expects id="expense-form1" */}
+      <form id="expense-form1" onSubmit={handleSubmit}>
+
+        {/* EXPENSE NAME */}
+        <label htmlFor="expense-name">Expense Name:</label>
+        <input
+          id="expense-name"
+          type="text"
+          value={expenseName}
+          onChange={(e) => setExpenseName(e.target.value)}
+        />
+
+        {/* CATEGORY */}
+        <label htmlFor="category-select">Select category:</label>
+        <select
+          id="category-select"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="">Select</option>
+          <option value="food">food</option>
+          <option value="travel">travel</option>
+          <option value="entertainment">entertainment</option>
+          <option value="others">others</option>
+        </select>
+
+        {/* AMOUNT */}
+        <label htmlFor="expense-amount">Expense Amount:</label>
+        <input
+          id="expense-amount"
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+
+        {/* SUBMIT BUTTON */}
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  );
+}
 
 export default ExpenseForm;
