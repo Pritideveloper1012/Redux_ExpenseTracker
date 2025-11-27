@@ -1,16 +1,30 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateCategoricalBudget, updateMonthlyBudget, updateUserName } from "../redux/userSlice";
-import { addTransactionEntry, removeAllTransactions } from "../redux/transactionSlice";
+import {
+  updateCategoricalBudget,
+  updateMonthlyBudget,
+  updateUserName,
+} from "../redux/userSlice";
+import {
+  addTransactionEntry,
+  removeAllTransactions,
+} from "../redux/transactionSlice";
 
 const TransactionsPage = () => {
   const dispatch = useDispatch();
+
   const user = useSelector((state) => state.user);
-  const transactions = useSelector((state) => state.transactions);
+
+  // 🔥 FIXED: Correct selector — get ARRAY
+  const transactions = useSelector(
+    (state) => state.transactions.transactionList
+  );
 
   const [food, setFood] = useState(user.categoricalBudget.food);
   const [travel, setTravel] = useState(user.categoricalBudget.travel);
-  const [entertainment, setEntertainment] = useState(user.categoricalBudget.entertainment);
+  const [entertainment, setEntertainment] = useState(
+    user.categoricalBudget.entertainment
+  );
   const [totalBudget, setTotalBudget] = useState(user.monthlyBudget);
 
   const [expenseName, setExpenseName] = useState("");
@@ -45,7 +59,14 @@ const TransactionsPage = () => {
     dispatch(removeAllTransactions());
     dispatch(updateUserName(""));
     dispatch(updateMonthlyBudget(""));
-    dispatch(updateCategoricalBudget({ food: "", travel: "", entertainment: "", others: 0 }));
+    dispatch(
+      updateCategoricalBudget({
+        food: "",
+        travel: "",
+        entertainment: "",
+        others: 0,
+      })
+    );
 
     setFood("");
     setTravel("");
@@ -119,8 +140,12 @@ const TransactionsPage = () => {
           placeholder="Entertainment Budget"
         />
 
-        <button id="new-update" onClick={handleUpdateBudget}>Update Tracker</button>
-        <button id="clear" onClick={handleNewTracker}>Start New Tracker</button>
+        <button id="new-update" onClick={handleUpdateBudget}>
+          Update Tracker
+        </button>
+        <button id="clear" onClick={handleNewTracker}>
+          Start New Tracker
+        </button>
       </div>
 
       {/* Insights Section */}
@@ -169,7 +194,9 @@ const TransactionsPage = () => {
           >
             <option value="">Select Category</option>
             {categories.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
             ))}
           </select>
 
@@ -205,7 +232,9 @@ const TransactionsPage = () => {
               <td>{tx.category}</td>
               <td>{tx.amount}</td>
               <td>
-                <button onClick={() => dispatch(removeAllTransactions())}>Delete</button>
+                <button onClick={() => dispatch(removeAllTransactions())}>
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
