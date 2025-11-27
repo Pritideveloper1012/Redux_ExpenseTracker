@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTransactionEntry } from "../redux/transactionSlice";
-import { useSelector } from "react-redux";
 
 const ExpenseForm = () => {
   const dispatch = useDispatch();
-  const { transactionList } = useSelector((state) => state.transactions);
 
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
@@ -13,21 +11,16 @@ const ExpenseForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!name || !category || !amount) {
-      alert("All fields are required!");
+      alert("All fields are required");
       return;
     }
-
-    dispatch(
-      addTransactionEntry({
-        id: Date.now(),
-        name,
-        category,
-        amount: Number(amount),
-      })
-    );
-
+    dispatch(addTransactionEntry({
+      id: Date.now(),
+      name,
+      category,
+      amount: Number(amount),
+    }));
     setName("");
     setCategory("");
     setAmount("");
@@ -35,24 +28,13 @@ const ExpenseForm = () => {
 
   return (
     <div className="form-container">
-      <div className="title" id="title">
-        New Expense Form
-      </div>
-
+      <div id="title" className="title">New Expense Form</div>
       <form id="expense-form1" onSubmit={handleSubmit}>
         <label htmlFor="expense-name">Expense Name</label>
-        <input
-          id="expense-name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <input id="expense-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Expense Name" />
 
         <label htmlFor="category-select">Category</label>
-        <select
-          id="category-select"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
+        <select id="category-select" value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="">Select Category</option>
           <option value="food">Food</option>
           <option value="travel">Travel</option>
@@ -61,12 +43,7 @@ const ExpenseForm = () => {
         </select>
 
         <label htmlFor="expense-amount">Amount</label>
-        <input
-          id="expense-amount"
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-        />
+        <input id="expense-amount" type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="Amount" />
 
         <button type="submit">Add</button>
       </form>
