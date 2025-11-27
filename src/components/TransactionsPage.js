@@ -9,14 +9,15 @@ import {
   addTransactionEntry,
   removeAllTransactions,
 } from "../redux/transactionSlice";
-import { resetAllExpense, updateTotalExpense, updateCategoricalExpense } from "../redux/expenseSlice"; // Added imports
+import { resetAllExpense, updateTotalExpense, updateCategoricalExpense } from "../redux/expenseSlice";
+import { useNavigate } from "react-router-dom"; // Added import
 
 const TransactionsPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Added
 
   const user = useSelector((state) => state.user);
 
-  // 🔥 FIXED: Correct selector — get ARRAY
   const transactions = useSelector(
     (state) => state.transactions.transactionList
   );
@@ -68,12 +69,14 @@ const TransactionsPage = () => {
         others: 0,
       })
     );
-    dispatch(resetAllExpense()); // Added: Reset expense totals
+    dispatch(resetAllExpense());
 
     setFood("");
     setTravel("");
     setEntertainment("");
     setTotalBudget("");
+
+    navigate("/"); // Added: Navigate back to LandingPage
   };
 
   // Add expense
@@ -99,7 +102,6 @@ const TransactionsPage = () => {
       })
     );
 
-    // Added: Update expense totals
     dispatch(updateTotalExpense({ amount: expenseAmountNum, operation: "add" }));
     dispatch(updateCategoricalExpense({ category: expenseCategory, amount: expenseAmountNum, operation: "add" }));
 
@@ -189,9 +191,9 @@ const TransactionsPage = () => {
 
       {/* Add Expense Section */}
       <div>
-        <div className="title" id="title">New Expense Form</div> {/* Added id="title" */}
-        <form className="expense-form1" id="expense-form1" onSubmit={handleAddExpense}> {/* Added className="expense-form1" */}
-          <label htmlFor="expense-name">Expense Name</label>
+        <div className="title" id="title">New Expense Form</div>
+        <form className="expense-form1" id="expense-form1" onSubmit={handleAddExpense}>
+          <label htmlFor="expense-name">Expense Name:</label> {/* Added colon */}
           <input
             id="expense-name"
             value={expenseName}
