@@ -191,40 +191,40 @@ const TransactionsPage = () => {
 
       {/* Add Expense Section */}
       <div>
-        <div className="title" id="title">New Expense Form</div>
-        <form className="expense-form1" id="expense-form1" onSubmit={handleAddExpense}>
-          <label htmlFor="expense-name">Expense Name:</label> {/* Added colon */}
-          <input
-            id="expense-name"
-            value={expenseName}
-            onChange={(e) => setExpenseName(e.target.value)}
-          />
+    <div className="title" id="title">New Expense Form</div>
+    <form className="expense-form1" id="expense-form1" onSubmit={handleAddExpense}>
+      
+      <label htmlFor="expense-name">Expense Name:</label>
+      <input
+        id="expense-name"
+        value={expenseName}
+        onChange={(e) => setExpenseName(e.target.value)}
+      />
 
-          <label htmlFor="category-select">Category</label>
-          <select
-            id="category-select"
-            value={expenseCategory}
-            onChange={(e) => setExpenseCategory(e.target.value)}
-          >
-            <option value="">Select Category</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
+      <label htmlFor="category-select">Select category:</label>
+      <select
+        id="category-select"
+        value={expenseCategory}
+        onChange={(e) => setExpenseCategory(e.target.value)}
+      >
+        <option value="">Select Category</option>
+        <option value="food">food</option>
+        <option value="travel">travel</option>
+        <option value="entertainment">entertainment</option>
+        <option value="others">others</option>
+      </select>
 
-          <label htmlFor="expense-amount">Amount</label>
-          <input
-            id="expense-amount"
-            type="number"
-            value={expenseAmount}
-            onChange={(e) => setExpenseAmount(e.target.value)}
-          />
+      <label htmlFor="expense-amount">Expense Amount:</label>
+      <input
+        id="expense-amount"
+        type="number"
+        value={expenseAmount}
+        onChange={(e) => setExpenseAmount(e.target.value)}
+      />
 
-          <button type="submit">Add</button>
-        </form>
-      </div>
+      <button type="submit">Submit</button>
+    </form>
+</div>
 
       {/* Expense Table */}
       <h3>Expenses</h3>
