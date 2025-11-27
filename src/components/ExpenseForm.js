@@ -55,7 +55,10 @@ const ExpenseForm = () => {
         />
 
         {/* Category: CRITICAL FIX - Must be 'Select category:' with no surrounding whitespace. */}
-        <label htmlFor="category-select" id="category-select">Select category:</label>
+        {/* Category: CRITICAL FIX - Restoring multi-line structure for text content visibility */}
+        <label htmlFor="category-select" id="category-select">
+          Select category:
+        </label>
         <select
           id="category-select"
           value={category}
