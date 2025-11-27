@@ -1,4 +1,3 @@
-// src/redux/expenseSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -7,7 +6,7 @@ const initialState = {
     food: 0,
     travel: 0,
     entertainment: 0,
-    others: 0, // match test
+    others: 0,
   },
 };
 
@@ -16,12 +15,14 @@ const expenseSlice = createSlice({
   initialState,
   reducers: {
     updateTotalExpense: (state, action) => {
-      if (action.payload.operation === "add") {
-        state.totalExpense += action.payload.amount;
-      } else if (action.payload.operation === "subtract") {
-        state.totalExpense -= action.payload.amount;
+      const { amount, operation } = action.payload;
+      if (operation === "add") {
+        state.totalExpense += amount;
+      } else if (operation === "subtract") {
+        state.totalExpense -= amount;
       }
     },
+
     updateCategoricalExpense: (state, action) => {
       const { category, amount, operation } = action.payload;
       if (operation === "add") {
@@ -30,11 +31,23 @@ const expenseSlice = createSlice({
         state.categoricalExpense[category] -= amount;
       }
     },
-    resetAllExpense: () => initialState,
+
+    resetAllExpense: (state) => {
+      state.totalExpense = 0;
+      state.categoricalExpense = {
+        food: 0,
+        travel: 0,
+        entertainment: 0,
+        others: 0,
+      };
+    },
   },
 });
 
-export const { updateTotalExpense, updateCategoricalExpense, resetAllExpense } =
-  expenseSlice.actions;
+export const {
+  updateTotalExpense,
+  updateCategoricalExpense,
+  resetAllExpense,
+} = expenseSlice.actions;
 
 export default expenseSlice.reducer;
