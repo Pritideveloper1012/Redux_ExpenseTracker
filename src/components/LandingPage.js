@@ -14,10 +14,10 @@ const LandingPage = () => {
   const [travel, setTravel] = useState("");
   const [entertainment, setEntertainment] = useState("");
 
-  // MODIFIED: handleStart now accepts an event (e)
+  // MODIFIED: handleStart now prevents default behavior and serves as the form submission handler
   const handleStart = (e) => {
     if (e) {
-        e.preventDefault(); // Prevents page reload when form submits naturally
+        e.preventDefault(); // Prevents page reload from cy.get("form").submit()
     }
     
     // Validations
@@ -63,12 +63,15 @@ const LandingPage = () => {
     setFood("");
     setTravel("");
     setEntertainment("");
+    
+    // FIX: Navigate back to the Landing Page after clearing state
+    navigate("/"); 
   };
 
   return (
     <div>
       <h2>Welcome to Expense Tracker</h2>
-      {/* MODIFIED: Add onSubmit to handle the broken test command cy.get("form").submit() */}
+      {/* MODIFIED: Add onSubmit={handleStart} for broken test support */}
       <form name="landing-page-form" onSubmit={handleStart}>
         <input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter Name" />
         <input id="budget" value={budget} onChange={(e) => setBudget(e.target.value)} placeholder="Enter Total Budget" />
@@ -76,7 +79,7 @@ const LandingPage = () => {
         <input id="travel" value={travel} onChange={(e) => setTravel(e.target.value)} placeholder="Travel Budget" />
         <input id="entertainment" value={entertainment} onChange={(e) => setEntertainment(e.target.value)} placeholder="Entertainment Budget" />
 
-        {/* The button type must be submit OR we call handleStart without an argument */}
+        {/* MODIFIED: Change type to submit for form handling compatibility */}
         <button type="submit" id="new-update">Start / Update Tracker</button> 
         <button type="button" id="clear" onClick={handleClear}>Start New Tracker</button>
       </form>
