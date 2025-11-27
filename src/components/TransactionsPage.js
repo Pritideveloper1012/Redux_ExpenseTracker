@@ -9,6 +9,7 @@ import {
   addTransactionEntry,
   removeAllTransactions,
 } from "../redux/transactionSlice";
+import { resetAllExpense, updateTotalExpense, updateCategoricalExpense } from "../redux/expenseSlice"; // Added imports
 
 const TransactionsPage = () => {
   const dispatch = useDispatch();
@@ -67,6 +68,7 @@ const TransactionsPage = () => {
         others: 0,
       })
     );
+    dispatch(resetAllExpense()); // Added: Reset expense totals
 
     setFood("");
     setTravel("");
@@ -82,14 +84,24 @@ const TransactionsPage = () => {
       return;
     }
 
+    const expenseAmountNum = Number(expenseAmount);
+    if (expenseAmountNum <= 0) {
+      alert("Amount must be greater than 0");
+      return;
+    }
+
     dispatch(
       addTransactionEntry({
         id: Date.now(),
         name: expenseName,
         category: expenseCategory,
-        amount: Number(expenseAmount),
+        amount: expenseAmountNum,
       })
     );
+
+    // Added: Update expense totals
+    dispatch(updateTotalExpense({ amount: expenseAmountNum, operation: "add" }));
+    dispatch(updateCategoricalExpense({ category: expenseCategory, amount: expenseAmountNum, operation: "add" }));
 
     setExpenseName("");
     setExpenseCategory("");
@@ -177,8 +189,8 @@ const TransactionsPage = () => {
 
       {/* Add Expense Section */}
       <div>
-        <div className="title">New Expense Form</div>
-        <form id="expense-form1" onSubmit={handleAddExpense}>
+        <div className="title" id="title">New Expense Form</div> {/* Added id="title" */}
+        <form className="expense-form1" id="expense-form1" onSubmit={handleAddExpense}> {/* Added className="expense-form1" */}
           <label htmlFor="expense-name">Expense Name</label>
           <input
             id="expense-name"
