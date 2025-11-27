@@ -10,11 +10,11 @@ import {
   removeAllTransactions,
 } from "../redux/transactionSlice";
 import { resetAllExpense, updateTotalExpense, updateCategoricalExpense } from "../redux/expenseSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Added import
 
 const TransactionsPage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Added
 
   const user = useSelector((state) => state.user);
 
@@ -76,7 +76,7 @@ const TransactionsPage = () => {
     setEntertainment("");
     setTotalBudget("");
 
-    navigate("/");
+    navigate("/"); // Added: Navigate back to LandingPage
   };
 
   // Add expense
@@ -193,14 +193,14 @@ const TransactionsPage = () => {
       <div>
         <div className="title" id="title">New Expense Form</div>
         <form className="expense-form1" id="expense-form1" onSubmit={handleAddExpense}>
-          <label htmlFor="expense-name">Expense Name:</label>
+          <label htmlFor="expense-name">Expense Name:</label> {/* Added colon */}
           <input
             id="expense-name"
             value={expenseName}
             onChange={(e) => setExpenseName(e.target.value)}
           />
 
-          <label htmlFor="category-select">Select category:</label> {/* Changed to match test */}
+          <label htmlFor="category-select">Category</label>
           <select
             id="category-select"
             value={expenseCategory}

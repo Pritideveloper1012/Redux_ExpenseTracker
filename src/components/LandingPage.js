@@ -48,18 +48,19 @@ const LandingPage = () => {
     setTravel("");
     setEntertainment("");
 
-    // Removed navigate("/tracker") to keep form on page
+    navigate("/tracker");
   };
 
   const handleClear = () => {
     dispatch(resetAllBudget());
     dispatch(removeAllTransactions());
-    dispatch(resetAllExpense());
+    dispatch(resetAllExpense()); // Added
     setName("");
     setBudget("");
     setFood("");
     setTravel("");
     setEntertainment("");
+    // Removed navigate("/")
   };
 
   return (
