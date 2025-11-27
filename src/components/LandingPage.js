@@ -1,17 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { resetAllTransactions } from "../redux/transactionSlice";
+import { setUserDetails } from "../redux/userSlice";
+import { setCategoricalBudget } from "../redux/expenseSlice";
 import { useNavigate } from "react-router-dom";
-import {
-  updateUserName,
-  updateMonthlyBudget,
-  updateCategoricalBudget,
-} from "../redux/userSlice";
-import { resetAllExpense } from "../redux/expenseSlice";
-import store from "../redux/store";
-
-if (window.Cypress && !window.store) {
-  window.store = store;
-}
 
 const LandingPage = () => {
   const dispatch = useDispatch();
@@ -23,120 +15,76 @@ const LandingPage = () => {
   const [travel, setTravel] = useState("");
   const [entertainment, setEntertainment] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleStart = () => {
+    dispatch(resetAllTransactions());
 
-    if (!name || !budget || !food || !travel || !entertainment) {
-      alert("All fields are required");
-      return;
-    }
-
-    const total = Number(budget);
-    const foodBudget = Number(food);
-    const travelBudget = Number(travel);
-    const entertainmentBudget = Number(entertainment);
-
-    const sum = foodBudget + travelBudget + entertainmentBudget;
-    const others = total - sum;
-
-    // Redux State Update
-    dispatch(updateUserName(name));
-    dispatch(updateMonthlyBudget(total));
     dispatch(
-      updateCategoricalBudget({
-        food: foodBudget,
-        travel: travelBudget,
-        entertainment: entertainmentBudget,
-        others,
+      setUserDetails({
+        name: name,
+        totalBudget: Number(budget),
       })
     );
-    dispatch(resetAllExpense());
 
-    // FIX: Reset local form state after submission (for passing the failing test)
+    dispatch(
+      setCategoricalBudget({
+        food: Number(food),
+        travel: Number(travel),
+        entertainment: Number(entertainment),
+        others: 0,
+      })
+    );
+
+    // Clear inputs
     setName("");
     setBudget("");
     setFood("");
     setTravel("");
     setEntertainment("");
-    // --- FIX END ---
 
-    navigate("/tracker");
+    navigate("/transactions");
   };
 
   return (
-    // FIX: Added ID to main div for better Cypress visibility/targeting
-    <div className="landing-page" id="landing-page-container"> 
-      <h1>Expense Tracker</h1>
+    <div>
+      <h2>Welcome to Expense Tracker</h2>
 
-      <form id="landing-page-form" onSubmit={handleSubmit}>
-        <input
-          id="name"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+      <input
+        id="name"
+        placeholder="Enter Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
 
-        <input
-          id="budget"
-          placeholder="Total Budget"
-          type="number"
-          value={budget}
-          onChange={(e) => setBudget(e.target.value)}
-        />
+      <input
+        id="budget"
+        placeholder="Enter Total Budget"
+        value={budget}
+        onChange={(e) => setBudget(e.target.value)}
+      />
 
-        <input
-          id="food"
-          placeholder="Food"
-          type="number"
-          value={food}
-          onChange={(e) => setFood(e.target.value)}
-        />
+      <input
+        id="food"
+        placeholder="Food Budget"
+        value={food}
+        onChange={(e) => setFood(e.target.value)}
+      />
 
-        <input
-          id="travel"
-          placeholder="Travel"
-          type="number"
-          value={travel}
-          onChange={(e) => setTravel(e.target.value)}
-        />
+      <input
+        id="travel"
+        placeholder="Travel Budget"
+        value={travel}
+        onChange={(e) => setTravel(e.target.value)}
+      />
 
-        <input
-          id="entertainment"
-          placeholder="Entertainment"
-          type="number"
-          value={entertainment}
-          onChange={(e) => setEntertainment(e.target.value)}
-        />
+      <input
+        id="entertainment"
+        placeholder="Entertainment Budget"
+        value={entertainment}
+        onChange={(e) => setEntertainment(e.target.value)}
+      />
 
-        <button id="new-update" type="submit">
-          New/Update tracker
-        </button>
-      </form>
-
-      <button
-        id="clear"
-        onClick={() => {
-          // Reset Redux state
-          dispatch(resetAllExpense());
-          dispatch(updateUserName(""));
-          dispatch(updateMonthlyBudget(""));
-          dispatch(
-            updateCategoricalBudget({
-              food: "",
-              travel: "",
-              entertainment: "",
-              others: "",
-            })
-          );
-
-          // Reset form inputs
-          setName("");
-          setBudget("");
-          setFood("");
-          setTravel("");
-          setEntertainment("");
-        }}
-      >
+      {/* IMPORTANT → Cypress expects this ID */}
+      <button id="new-update" onClick={handleStart}>
         Start new tracker
       </button>
     </div>
