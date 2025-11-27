@@ -14,7 +14,10 @@ const LandingPage = () => {
   const [travel, setTravel] = useState("");
   const [entertainment, setEntertainment] = useState("");
 
-  const handleStart = () => {
+  const handleStart = (e) => {
+    if (e) {
+        e.preventDefault(); // Prevents page reload triggered by cy.get("form").submit()
+    }
     // Validations
     const total = Number(budget);
     const catSum = Number(food) + Number(travel) + Number(entertainment);
