@@ -51,19 +51,23 @@ const ExpenseForm = () => {
           value={expenseName}
           onChange={(e) => setExpenseName(e.target.value)}
         />
+<label htmlFor="category-select">
+  <span>Select category:</span>
+</label>
 
-        <label htmlFor="category-select">Select category:</label>
-        <select
-          id="category-select"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option value="">Select Category</option>
-          <option value="food">Food</option>
-          <option value="travel">Travel</option>
-          <option value="entertainment">Entertainment</option>
-          <option value="others">Others</option>
-        </select>
+<select
+  id="category-select"
+  value={category}
+  onChange={(e) => setCategory(e.target.value)}
+>
+  <option value="">Select Category</option>
+  <option value="food">Food</option>
+  <option value="travel">Travel</option>
+  <option value="entertainment">Entertainment</option>
+  <option value="others">Others</option>
+</select>
+
+
 
         <label htmlFor="expense-amount">Amount:</label>
         <input
