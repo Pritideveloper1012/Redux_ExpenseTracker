@@ -50,7 +50,7 @@ const LandingPage = () => {
     setTravel("");
     setEntertainment("");
 
-    navigate("/transactions");
+    // navigate("/transactions");
   };
 
   const handleClear = () => {
@@ -73,8 +73,10 @@ const LandingPage = () => {
         <input id="travel" value={travel} onChange={(e) => setTravel(e.target.value)} placeholder="Travel Budget" />
         <input id="entertainment" value={entertainment} onChange={(e) => setEntertainment(e.target.value)} placeholder="Entertainment Budget" />
 
-        <button type="button" id="new-update" onClick={handleStart}>Start / Update Tracker</button>
-        <button type="button" id="clear" onClick={handleClear}>Start New Tracker</button>
+        <button type="submit" id="new-update">Start / Update Tracker</button> 
+        <button type="button" id="clear" onClick={handleClear}>Start New Tracker</button>
+      
+    
       </form>
     </div>
   );
