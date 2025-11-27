@@ -39,13 +39,11 @@ const ExpenseForm = () => {
 
   return (
     <div className="form-container">
-      {/* Title ID required by Cypress */}
       <div id="title">New Expense Form</div>
 
-      {/* FORM MUST HAVE id="expense-form1" for the test to proceed */}
       <form id="expense-form1" onSubmit={handleSubmit}>
 
-        {/* Expense Name: Tightened for consistency */}
+        {/* Expense Name */}
         <label htmlFor="expense-name" id="expense-name">Expense Name:</label>
         <input
           id="expense-name"
@@ -54,8 +52,8 @@ const ExpenseForm = () => {
           onChange={(e) => setExpenseName(e.target.value)}
         />
 
-        {/* Category: CRITICAL FIX for the final error! */}
-        <label htmlFor="category-select" id="category-select">Select category:</label>
+        {/* Category: FINAL FIX ATTEMPT - added a single space after colon */}
+        <label htmlFor="category-select" id="category-select">Select category: </label>
         <select
           id="category-select"
           value={category}
@@ -68,7 +66,7 @@ const ExpenseForm = () => {
           <option value="others">Others</option>
         </select>
 
-        {/* Amount: Tightened for consistency */}
+        {/* Amount */}
         <label htmlFor="expense-amount" id="expense-amount">Amount:</label>
         <input
           id="expense-amount"
@@ -77,7 +75,6 @@ const ExpenseForm = () => {
           onChange={(e) => setAmount(e.target.value)}
         />
 
-        {/* Submit button - MUST be type submit */}
         <button type="submit">Submit</button>
       </form>
     </div>
