@@ -47,7 +47,7 @@ const LandingPage = () => {
     setTravel("");
     setEntertainment("");
 
-    navigate("/tracker");
+    navigate("/transactions");
   };
 
   const handleClear = () => {
