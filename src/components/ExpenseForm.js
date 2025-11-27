@@ -42,39 +42,21 @@ const ExpenseForm = () => {
     <div className="form-container">
       <div className="title">New Expense Form</div>
 
-      <form id="expense-form1" onSubmit={handleSubmit}>
-        <label htmlFor="expense-name">Expense Name</label>
-        <input
-          id="expense-name"
-          value={expenseName}
-          onChange={(e) => setExpenseName(e.target.value)}
-          placeholder="Enter expense name"
-        />
+      <form id="expense-form1">
+  <div id="title">New Expense Form</div>
 
-        <label htmlFor="category-select">Category</label>
-        <select
-          id="category-select"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option value="">Select Category</option>
-          <option value="food">Food</option>
-          <option value="travel">Travel</option>
-          <option value="entertainment">Entertainment</option>
-          <option value="others">Others</option>
-        </select>
+  <label htmlFor="expense-name">Expense Name</label>
+  <input id="expense-name" />
 
-        <label htmlFor="expense-amount">Amount</label>
-        <input
-          id="expense-amount"
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          placeholder="Enter amount"
-        />
+  <label htmlFor="category-select">Category</label>
+  <select id="category-select"></select>
 
-        <button type="submit">Add</button>
-      </form>
+  <label htmlFor="expense-amount">Amount</label>
+  <input id="expense-amount" />
+
+  <button type="submit">Submit</button>
+</form>
+
     </div>
   );
 };
