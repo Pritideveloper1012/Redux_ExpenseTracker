@@ -42,13 +42,11 @@ const ExpenseForm = () => {
       {/* Title ID required by Cypress */}
       <div id="title">New Expense Form</div>
 
-      {/* FORM MUST HAVE id="expense-form1" - Note: The test expected .expense-form1, but id will work too. */}
+      {/* FORM MUST HAVE id="expense-form1" for the test to proceed */}
       <form id="expense-form1" onSubmit={handleSubmit}>
 
-        {/* Expense Name */}
-        <label htmlFor="expense-name" id="expense-name">
-          Expense Name:
-        </label>
+        {/* Expense Name: Tightened for consistency */}
+        <label htmlFor="expense-name" id="expense-name">Expense Name:</label>
         <input
           id="expense-name"
           type="text"
@@ -56,16 +54,8 @@ const ExpenseForm = () => {
           onChange={(e) => setExpenseName(e.target.value)}
         />
 
-        {/* Category - FIX APPLIED HERE */}
-        <label htmlFor="category-select" id="category-select">
-          Select category:
-        </label> 
-        {/*
-          Change the lines above to:
-          <label htmlFor="category-select" id="category-select">Select category:</label>
-        */}
-
-        <label htmlFor="category-select" id="category-select">Select category:</label>
+        {/* Category: CRITICAL FIX for the final error! */}
+        <label htmlFor="category-select" id="category-select">Select category:</label>
         <select
           id="category-select"
           value={category}
@@ -78,10 +68,8 @@ const ExpenseForm = () => {
           <option value="others">Others</option>
         </select>
 
-        {/* Amount */}
-        <label htmlFor="expense-amount" id="expense-amount">
-          Amount:
-        </label>
+        {/* Amount: Tightened for consistency */}
+        <label htmlFor="expense-amount" id="expense-amount">Amount:</label>
         <input
           id="expense-amount"
           type="number"
