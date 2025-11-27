@@ -74,7 +74,7 @@ const LandingPage = () => {
     <div>
       <h2>Welcome to Expense Tracker</h2>
       {/* Retained onSubmit={handleStart} for Test compatibility */}
-      <form name="landing-page-form" onSubmit={handleStart}>
+      <form name="expense-form1" onSubmit={handleStart}>
         <input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter Name" />
         <input id="budget" value={budget} onChange={(e) => setBudget(e.target.value)} placeholder="Enter Total Budget" />
         <input id="food" value={food} onChange={(e) => setFood(e.target.value)} placeholder="Food Budget" />
