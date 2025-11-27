@@ -50,7 +50,7 @@ const LandingPage = () => {
     setTravel("");
     setEntertainment("");
 
-    // navigate("/transactions");
+    navigate("/transactions");
   };
 
   const handleClear = () => {
