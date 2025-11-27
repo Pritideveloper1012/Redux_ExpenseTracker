@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTransactionEntry } from "../redux/transactionSlice";
+import { useSelector } from "react-redux";
 
 const ExpenseForm = () => {
   const dispatch = useDispatch();
+  const { transactionList } = useSelector((state) => state.transactions);
 
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
@@ -12,19 +14,20 @@ const ExpenseForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Do not add empty values
-    if (!name || !category || !amount) return;
+    if (!name || !category || !amount) {
+      alert("All fields are required!");
+      return;
+    }
 
     dispatch(
       addTransactionEntry({
-        id: Date.now(),   // Cypress requires unique ID
+        id: Date.now(),
         name,
         category,
         amount: Number(amount),
       })
     );
 
-    // Reset form fields after submit
     setName("");
     setCategory("");
     setAmount("");
@@ -32,39 +35,40 @@ const ExpenseForm = () => {
 
   return (
     <div className="form-container">
-      <div className="title">Add Expense</div>
+      <div className="title" id="title">
+        New Expense Form
+      </div>
 
-      <form onSubmit={handleSubmit}>
+      <form id="expense-form1" onSubmit={handleSubmit}>
+        <label htmlFor="expense-name">Expense Name</label>
         <input
           id="expense-name"
-          placeholder="Expense Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
 
+        <label htmlFor="category-select">Category</label>
         <select
-          id="category"
+          id="category-select"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         >
           <option value="">Select Category</option>
-          <option value="food">food</option>
-          <option value="travel">travel</option>
-          <option value="entertainment">entertainment</option>
-          <option value="others">others</option>
+          <option value="food">Food</option>
+          <option value="travel">Travel</option>
+          <option value="entertainment">Entertainment</option>
+          <option value="others">Others</option>
         </select>
 
+        <label htmlFor="expense-amount">Amount</label>
         <input
-          id="amount"
+          id="expense-amount"
           type="number"
-          placeholder="Amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
 
-        <button id="add-btn" type="submit">
-          Add
-        </button>
+        <button type="submit">Add</button>
       </form>
     </div>
   );
