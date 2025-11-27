@@ -39,11 +39,13 @@ const ExpenseForm = () => {
 
   return (
     <div className="form-container">
+      {/* Required ID: title */}
       <div id="title">New Expense Form</div>
 
+      {/* Required ID: expense-form1 */}
       <form id="expense-form1" onSubmit={handleSubmit}>
 
-        {/* Expense Name */}
+        {/* Expense Name: Required ID/Label: expense-name */}
         <label htmlFor="expense-name" id="expense-name">Expense Name:</label>
         <input
           id="expense-name"
@@ -52,8 +54,8 @@ const ExpenseForm = () => {
           onChange={(e) => setExpenseName(e.target.value)}
         />
 
-        {/* Category: FINAL FIX ATTEMPT - added a single space after colon */}
-        <label htmlFor="category-select" id="category-select">Select category: </label>
+        {/* Category: CRITICAL FIX - Must be 'Select category:' with no surrounding whitespace. */}
+        <label htmlFor="category-select" id="category-select">Select category:</label>
         <select
           id="category-select"
           value={category}
@@ -66,7 +68,7 @@ const ExpenseForm = () => {
           <option value="others">Others</option>
         </select>
 
-        {/* Amount */}
+        {/* Amount: Required ID/Label: expense-amount */}
         <label htmlFor="expense-amount" id="expense-amount">Amount:</label>
         <input
           id="expense-amount"
@@ -75,6 +77,7 @@ const ExpenseForm = () => {
           onChange={(e) => setAmount(e.target.value)}
         />
 
+        {/* Submit button: Required type="submit" */}
         <button type="submit">Submit</button>
       </form>
     </div>
