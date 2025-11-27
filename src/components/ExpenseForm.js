@@ -4,7 +4,7 @@ import { addTransactionEntry } from "../redux/transactionSlice";
 
 const ExpenseForm = () => {
   const dispatch = useDispatch();
-  const { userName } = useSelector((state) => state.user); // Ensure userName is available
+  const { userName } = useSelector((state) => state.user);
 
   const [expenseName, setExpenseName] = useState("");
   const [category, setCategory] = useState("");
@@ -43,8 +43,8 @@ const ExpenseForm = () => {
       <div id="title">New Expense Form</div>
 
       <form className="expense-form1" onSubmit={handleSubmit}>
-        <label id="expense-name" for="expense-name">Expense Name:</label>
 
+        <label htmlFor="expense-name">Expense Name:</label>
         <input
           id="expense-name"
           type="text"
@@ -52,8 +52,7 @@ const ExpenseForm = () => {
           onChange={(e) => setExpenseName(e.target.value)}
         />
 
-       <label id="category-select" for="category-select">Select category:</label>
-
+        <label htmlFor="category-select">Select category:</label>
         <select
           id="category-select"
           value={category}
@@ -66,8 +65,7 @@ const ExpenseForm = () => {
           <option value="others">Others</option>
         </select>
 
-        <label id="expense-amount" for="expense-amount">Amount:</label>
-
+        <label htmlFor="expense-amount">Amount:</label>
         <input
           id="expense-amount"
           type="number"
