@@ -14,6 +14,7 @@ const ExpenseForm = () => {
 
     dispatch(
       addTransactionEntry({
+        id: Date.now(),   // Cypress requires ID
         name,
         category,
         amount: Number(amount),
@@ -27,11 +28,9 @@ const ExpenseForm = () => {
 
   return (
     <div className="form-container">
-      {/* Cypress expects this */}
       <div className="title">Add Expense</div>
 
       <form onSubmit={handleSubmit}>
-
         <input
           id="expense-name"
           placeholder="Expense Name"

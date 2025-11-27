@@ -1,36 +1,60 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { removeAllTransactions } from "../redux/transactionSlice";
+import { setUserDetails } from "../redux/userSlice";
+import { setCategoricalBudget } from "../redux/expenseSlice";
 import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const totalExpense = useSelector((state) => state.expense.totalExpense);
-  const categoricalExpense = useSelector(
-    (state) => state.expense.categoricalExpense
-  );
+  const [name, setName] = useState("");
+  const [budget, setBudget] = useState("");
+  const [food, setFood] = useState("");
+  const [travel, setTravel] = useState("");
+  const [entertainment, setEntertainment] = useState("");
+
+  const handleStart = () => {
+    dispatch(removeAllTransactions());
+
+    dispatch(
+      setUserDetails({
+        name,
+        totalBudget: Number(budget),
+      })
+    );
+
+    dispatch(
+      setCategoricalBudget({
+        food: Number(food),
+        travel: Number(travel),
+        entertainment: Number(entertainment),
+        others: 0,
+      })
+    );
+
+    setName("");
+    setBudget("");
+    setFood("");
+    setTravel("");
+    setEntertainment("");
+
+    navigate("/transactions"); // IMPORTANT
+  };
 
   return (
-    <div className="landing-container">
-      <div className="title">Xpense Tracker</div>
+    <div>
+      <h2>Welcome to Expense Tracker</h2>
 
-      <div className="card">
-        <div>Total Expense</div>
-        <div id="total-expense">₹{totalExpense}</div>
-      </div>
+      <input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter Name" />
+      <input id="budget" value={budget} onChange={(e) => setBudget(e.target.value)} placeholder="Enter Total Budget" />
+      <input id="food" value={food} onChange={(e) => setFood(e.target.value)} placeholder="Food Budget" />
+      <input id="travel" value={travel} onChange={(e) => setTravel(e.target.value)} placeholder="Travel Budget" />
+      <input id="entertainment" value={entertainment} onChange={(e) => setEntertainment(e.target.value)} placeholder="Entertainment Budget" />
 
-      <div className="card">
-        <div>Category-wise Expense</div>
-        <ul id="categorical-expense">
-          <li>food: ₹{categoricalExpense.food}</li>
-          <li>travel: ₹{categoricalExpense.travel}</li>
-          <li>entertainment: ₹{categoricalExpense.entertainment}</li>
-          <li>others: ₹{categoricalExpense.others}</li>
-        </ul>
-      </div>
-
-      <button id="track-btn" onClick={() => navigate("/tracker")}>
-        Track Expenses
+      <button id="new-update" onClick={handleStart}>
+        Start new tracker
       </button>
     </div>
   );
