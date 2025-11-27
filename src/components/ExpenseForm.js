@@ -43,7 +43,8 @@ const ExpenseForm = () => {
       <div id="title">New Expense Form</div>
 
       <form className="expense-form1" onSubmit={handleSubmit}>
-        <label htmlFor="expense-name">Expense Name</label>
+        <label id="expense-name" for="expense-name">Expense Name:</label>
+
         <input
           id="expense-name"
           type="text"
@@ -51,7 +52,8 @@ const ExpenseForm = () => {
           onChange={(e) => setExpenseName(e.target.value)}
         />
 
-        <label htmlFor="category-select">Category</label>
+       <label id="category-select" for="category-select">Select category:</label>
+
         <select
           id="category-select"
           value={category}
@@ -64,7 +66,8 @@ const ExpenseForm = () => {
           <option value="others">Others</option>
         </select>
 
-        <label htmlFor="expense-amount">Amount</label>
+        <label id="expense-amount" for="expense-amount">Amount:</label>
+
         <input
           id="expense-amount"
           type="number"
